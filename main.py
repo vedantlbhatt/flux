@@ -28,14 +28,15 @@ app.include_router(answer.router)
 
 
 from fastapi.responses import JSONResponse
+from utils.responses import PrettyJSONResponse
 
 
 @app.exception_handler(RequestValidationError)
 async def validation_handler(request, exc: RequestValidationError):
-    return JSONResponse(status_code=400, content={"error": str(exc), "code": "INVALID_BODY"})
+    return PrettyJSONResponse(status_code=400, content={"error": str(exc), "code": "INVALID_BODY"})
 
 
 @app.exception_handler(Exception)
 async def global_handler(request, exc: Exception):
     logger.exception("Unhandled exception")
-    return JSONResponse(status_code=500, content={"error": str(exc), "code": "INTERNAL"})
+    return PrettyJSONResponse(status_code=500, content={"error": str(exc), "code": "INTERNAL"})

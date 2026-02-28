@@ -2,11 +2,12 @@
 from fastapi import APIRouter
 
 import config
+from utils.responses import PrettyJSONResponse
 
 router = APIRouter(tags=["utility"])
 
 
-@router.get("/health")
+@router.get("/health", response_class=PrettyJSONResponse)
 def health() -> dict:
     return {
         "status": "ok",
