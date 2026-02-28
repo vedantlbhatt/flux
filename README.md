@@ -13,9 +13,13 @@ bun install
 bun run search "your query"
 ```
 
+## Optional: Reranking
+
+If you set `COHERE_API_KEY` in `.env`, search results are reranked by relevance using [Cohere Rerank](https://docs.cohere.com/docs/rerank). Get a key at [dashboard.cohere.com](https://dashboard.cohere.com/). Without it, results use Tavily’s default order.
+
 ## Scripts
 
-- `bun run search <query>` — Run a web search from the CLI
+- `bun run search <query>` — Run a web search (with optional Cohere rerank)
 - `bun run lint` — Lint with oxlint
 - `bun run lint:fix` — Lint and auto-fix
 
