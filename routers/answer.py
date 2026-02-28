@@ -90,7 +90,7 @@ def answer(
             content={"error": "No results found", "code": "NO_RESULTS"},
         )
 
-    # 10. Take top 5 by rank_flux
+    # 10. Take top 5
     top5 = flow.results[:5]
     sources = [(r.title, r.snippet) for r in top5]
 
@@ -107,7 +107,7 @@ def answer(
 
     # 14. Build citations from top 5
     citations = [
-        Citation(title=r.title, url=r.url, score=r.score, rank_flux=r.rank_flux)
+        Citation(title=r.title, url=r.url, score=r.score, rank=r.rank)
         for r in top5
     ]
 

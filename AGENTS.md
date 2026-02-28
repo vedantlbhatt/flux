@@ -30,7 +30,7 @@ That is 8 steps, 4 different services, and 200+ lines of plumbing before a devel
 - Tavily — returns results but does not expose reranking scores or rank deltas, no conversation context
 - Exa — powerful but expensive, complex surface, not beginner-friendly
 
-Flux is transparent: every response includes `rank_original` and `rank_flux` — the explicit proof that reranking changed the results and why. Flux is also context-aware: conversation endpoints bias reranking using the full history of what was asked before, not just the latest query.
+Flux is context-aware: conversation endpoints bias reranking using the full history of what was asked before, not just the latest query.
 
 ---
 
@@ -38,7 +38,6 @@ Flux is transparent: every response includes `rank_original` and `rank_flux` —
 
 - Live web search via Tavily API — real, current results, never a static corpus.
 - Professional reranking via Cohere Rerank API — not cosine similarity on sentence transformers, a dedicated reranking model that scores query-document relevance directly.
-- Every result exposes `rank_original` and `rank_flux` — the reranking delta is always visible.
 - Stateful conversations — multi-turn context-aware search where each query builds on the previous ones.
 - Four endpoints covering the full spectrum from raw results to deep synthesized answers.
 - A developer can clone, configure, and make their first successful API call in under 5 minutes.
@@ -88,8 +87,7 @@ url              str     — page URL
 title            str     — page title from Tavily
 snippet          str     — clean extracted text excerpt, 150–300 chars
 score            float   — Cohere relevance score, 0.0–1.0
-rank_original    int     — position in Tavily results before reranking (1-indexed)
-rank_flux        int     — position after Cohere reranking (1-indexed)
+rank              int     — position in results (1-indexed)
 ```
 
 ### SearchResponse
@@ -113,7 +111,7 @@ model            str     — always "gpt-4o-mini"
 title            str
 url              str
 score            float
-rank_flux        int
+rank             int
 ```
 
 ### Conversation
@@ -238,8 +236,8 @@ Rules:
 4.  If Tavily returns 0 results → 404 NO_RESULTS
 5.  Call Cohere Rerank API: query + list of result snippets → relevance scores
 6.  If Cohere fails → return Tavily results unranked, reranked=false, log warning
-7.  Assign rank_original (Tavily position) and rank_flux (Cohere position) to each result
-8.  Sort by rank_flux ascending
+7.  Assign rank (position) to each result
+8.  Sort by rank ascending
 9.  Truncate to limit
 10. Return SearchResponse
 ```
@@ -247,7 +245,7 @@ Rules:
 ### `GET /answer`
 ```
 1–9. Identical to /search with limit=10
-10.  Take top 5 by rank_flux
+10.  Take top 5 by rank
 11.  Build prompt:
      "Answer the following question using only the sources provided.
       Be concise. Cite sources by number [1], [2], etc.
@@ -295,8 +293,8 @@ Rules:
     - Pass full context string to Tavily so results are relevant to the conversation, not just the latest query
 4.  Call Tavily search API with context-aware query
 5.  Call Cohere Rerank API — rerank using current query only, not full context
-6.  Assign rank_original and rank_flux
-7.  Take top 5 by rank_flux, build prompt with conversation history context
+6.  Assign rank to each result
+7.  Take top 5, build prompt with conversation history context
 8.  Call gpt-4o-mini with full conversation history + new sources
 9.  Build Message object with query, answer, citations, results
 10. Append Message to conversation.messages
@@ -375,7 +373,7 @@ Rules:
 These must work before anything else is touched:
 
 - `GET /health` — confirms Tavily and Cohere are reachable
-- `GET /search` — Tavily retrieval + Cohere reranking, `rank_original` and `rank_flux` on every result
+- `GET /search` — Tavily retrieval + Cohere reranking, rank on every result
 - All error codes returning correct shapes and HTTP statuses
 - Cohere failure degrades gracefully to `reranked=false`
 
@@ -394,7 +392,7 @@ These must work before anything else is touched:
 1. FastAPI scaffold + `/health` + global error handler middleware + all Pydantic models defined upfront.
 2. Tavily service — `GET /search` returns raw Tavily results, no reranking. Verify with curl.
 3. Cohere service — takes list of strings + query → returns relevance scores. Unit test independently.
-4. Wire reranking into `GET /search` — assign `rank_original` + `rank_flux`. Verify delta is visible.
+4. Wire reranking into `GET /search` — assign rank to each result.
 5. `GET /answer` — build prompt + OpenAI call + citation assembly. Handle `ANSWER_FAILED`.
 6. `GET /contents` — Tavily extract call. Handle partial failures per URL.
 7. Conversation store — in-memory dict, CRUD operations, all four conversation endpoints.
@@ -402,7 +400,7 @@ These must work before anything else is touched:
 9. Error handling pass — trigger every error code manually. Confirm shape and status.
 10. README + Postman collection. Quickstart verified clean on fresh clone.
 11. Deploy to Railway or Render — get a public URL. Verify all endpoints work at public URL, not just localhost.
-12. Demo prep — find 3 queries where `rank_original` ≠ `rank_flux` visibly. Prepare a 3-turn conversation demo showing context awareness.
+12. Demo prep — prepare a 3-turn conversation demo showing context awareness.
 
 ---
 
@@ -491,13 +489,7 @@ postman_collection.json
 4. **Quickstart** — exactly 3 steps: clone → fill `.env` → `docker compose up`. First curl call shown inline.
 5. **Endpoint reference** — table: method, path, params, response shape, example for every endpoint.
 6. **curl examples** — copy-pasteable, runnable examples for all endpoints including multi-turn conversation.
-7. **The demo** — side-by-side showing `rank_original` vs `rank_flux` on a real query:
-   ```
-   Query: "best open source LLM frameworks 2025"
-   rank_original=1  rank_flux=7   ← SEO-gamed listicle from 2022
-   rank_original=4  rank_flux=1   ← Recent, semantically relevant technical post
-   ```
-8. **Conversation demo** — 3-turn example showing context awareness:
+7. **Conversation demo** — 3-turn example showing context awareness:
    ```
    Turn 1: "what is SVB"          → explains SVB
    Turn 2: "why did it collapse"  → knows this means SVB, not generic collapse question

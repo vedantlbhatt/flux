@@ -239,7 +239,7 @@ def add_message_endpoint(
         )
 
     citations = [
-        Citation(title=r.title, url=r.url, score=r.score, rank_flux=r.rank_flux)
+        Citation(title=r.title, url=r.url, score=r.score, rank=r.rank)
         for r in top5
     ]
 

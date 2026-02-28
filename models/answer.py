@@ -1,11 +1,11 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Citation(BaseModel):
     title: str
     url: str
     score: float
-    rank_flux: int
+    rank: int = Field(description="Position in results (1-indexed)")
 
 
 class AnswerResponse(BaseModel):
