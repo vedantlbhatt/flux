@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
-from routers import health, search, answer
+from routers import health, search, answer, contents
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -25,6 +25,7 @@ app = FastAPI(
 app.include_router(health.router)
 app.include_router(search.router)
 app.include_router(answer.router)
+app.include_router(contents.router)
 
 
 from fastapi.responses import JSONResponse
