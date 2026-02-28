@@ -3,10 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "search": "bun run src/cli.ts",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix"
   },
   "devDependencies": {
+    "@types/node": "^25.3.2",
     "oxlint": "^1.50.0"
   }
 }
