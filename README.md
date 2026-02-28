@@ -17,9 +17,24 @@ bun run search "your query"
 
 If you set `COHERE_API_KEY` in `.env`, search results are reranked by relevance using [Cohere Rerank](https://docs.cohere.com/docs/rerank). Get a key at [dashboard.cohere.com](https://dashboard.cohere.com/). Without it, results use Tavily’s default order.
 
+## API server (Tier A)
+
+Run the FastAPI server:
+
+```bash
+python -m venv .venv && .venv/bin/pip install -r requirements.txt
+bun run api
+```
+
+Then open:
+- **Health**: `curl http://localhost:8000/health`
+- **Search**: `curl "http://localhost:8000/search?q=hello+world"`
+- **Docs**: http://localhost:8000/docs
+
 ## Scripts
 
-- `bun run search <query>` — Run a web search (with optional Cohere rerank)
+- `bun run api` — Start FastAPI server (Tavily + Cohere rerank)
+- `bun run search <query>` — CLI web search (with optional Cohere rerank)
 - `bun run lint` — Lint with oxlint
 - `bun run lint:fix` — Lint and auto-fix
 

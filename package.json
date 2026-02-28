@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "search": "bun run src/cli.ts",
+    "api": ".venv/bin/uvicorn main:app --reload --host 0.0.0.0",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix"
   },
