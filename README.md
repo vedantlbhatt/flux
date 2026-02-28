@@ -31,6 +31,37 @@ Then open:
 - **Search**: `curl "http://localhost:8000/search?q=hello+world"`
 - **Docs**: http://localhost:8000/docs
 
+## Stateful conversations
+
+Multi-turn context-aware search. Each message builds on previous turns.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/conversations` | Create a new conversation |
+| `GET` | `/conversations` | List conversations (paginated: `page`, `page_size`) |
+| `GET` | `/conversations/{id}` | Get full conversation with messages |
+| `POST` | `/conversations/{id}/messages` | Add a query; returns synthesized answer with citations |
+| `DELETE` | `/conversations/{id}` | Delete conversation (204 No Content) |
+
+**Example — 3-turn conversation:**
+
+```bash
+# Create conversation
+CONV=$(curl -s -X POST http://localhost:8000/conversations | jq -r '.id')
+
+# Turn 1
+curl -s -X POST "http://localhost:8000/conversations/$CONV/messages" \
+  -H "Content-Type: application/json" -d '{"query": "what is SVB"}'
+
+# Turn 2 (context-aware: knows SVB from turn 1)
+curl -s -X POST "http://localhost:8000/conversations/$CONV/messages" \
+  -H "Content-Type: application/json" -d '{"query": "why did it collapse"}'
+
+# Turn 3 (knows SVB collapse context)
+curl -s -X POST "http://localhost:8000/conversations/$CONV/messages" \
+  -H "Content-Type: application/json" -d '{"query": "what was the federal response"}'
+```
+
 ## Scripts
 
 - `bun run api` — Start FastAPI server (Tavily + Cohere rerank)

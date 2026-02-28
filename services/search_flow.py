@@ -16,16 +16,25 @@ class SearchFlowResult(NamedTuple):
     reranked: bool
 
 
-def run_search(query: str, limit: int = 10, topic: str = "general", days: int | None = None) -> SearchFlowResult:
+def run_search(
+    query: str,
+    limit: int = 10,
+    topic: str = "general",
+    days: int | None = None,
+    *,
+    search_query: str | None = None,
+) -> SearchFlowResult:
     """
     Run Tavily search + Cohere rerank. Returns ranked SearchResult list.
     Raises on Tavily failure. Degrades to Tavily order on Cohere failure.
+    When search_query is provided (e.g. context-aware), Tavily uses it; Cohere always uses query.
     """
     if not config.TAVILY_API_KEY:
         raise ValueError("TAVILY_API_KEY not configured")
+    tavily_query = (search_query or query).strip()
     tavily_data = tavily_search(
         config.TAVILY_API_KEY,
-        query,
+        tavily_query,
         max_results=20,
         topic=topic,
         days=days,
@@ -35,7 +44,7 @@ def run_search(query: str, limit: int = 10, topic: str = "general", days: int | 
 
     if config.COHERE_API_KEY:
         try:
-            scores = cohere_rerank(config.COHERE_API_KEY, query, documents, top_n=len(documents))
+            scores = cohere_rerank(config.COHERE_API_KEY, query.strip(), documents, top_n=len(documents))
             ranked = merge_and_rank(results_list, scores)
             return SearchFlowResult(results=ranked[:limit], reranked=True)
         except Exception as e:
