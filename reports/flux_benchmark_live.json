@@ -1,0 +1,230 @@
+{
+  "meta": {
+    "base_url": "http://localhost:8000",
+    "queries_count": 10,
+    "loops": 1
+  },
+  "summaries": [
+    {
+      "endpoint": "/answer",
+      "requests": 5,
+      "success_rate": 1.0,
+      "p50_ms": 3054.9107999977423,
+      "p95_ms": 3405.8638000024075,
+      "p99_ms": 3405.8638000024075,
+      "avg_ms": 3054.2747400002554,
+      "error_rate": 0.0,
+      "reranked_false_rate": null,
+      "avg_rank_changed_ratio": null,
+      "avg_citations": 5.0
+    },
+    {
+      "endpoint": "/conversations/{id}/messages",
+      "requests": 3,
+      "success_rate": 1.0,
+      "p50_ms": 3138.60090000162,
+      "p95_ms": 3880.457100000058,
+      "p99_ms": 3880.457100000058,
+      "avg_ms": 3227.302733334606,
+      "error_rate": 0.0,
+      "reranked_false_rate": null,
+      "avg_rank_changed_ratio": null,
+      "avg_citations": 5.0
+    },
+    {
+      "endpoint": "/search",
+      "requests": 10,
+      "success_rate": 1.0,
+      "p50_ms": 1942.144599997846,
+      "p95_ms": 2410.5724999972153,
+      "p99_ms": 2410.5724999972153,
+      "avg_ms": 2045.222389999617,
+      "error_rate": 0.0,
+      "reranked_false_rate": 0.0,
+      "avg_rank_changed_ratio": 0.0,
+      "avg_citations": null
+    }
+  ],
+  "runs": [
+    {
+      "endpoint": "/search",
+      "status_code": 200,
+      "elapsed_ms": 2011.4969000023848,
+      "ok": true,
+      "error_code": null,
+      "reranked": true,
+      "rank_changed_ratio": 0.0,
+      "citation_count": null
+    },
+    {
+      "endpoint": "/search",
+      "status_code": 200,
+      "elapsed_ms": 2236.0887000031653,
+      "ok": true,
+      "error_code": null,
+      "reranked": true,
+      "rank_changed_ratio": 0.0,
+      "citation_count": null
+    },
+    {
+      "endpoint": "/search",
+      "status_code": 200,
+      "elapsed_ms": 2270.198199999868,
+      "ok": true,
+      "error_code": null,
+      "reranked": true,
+      "rank_changed_ratio": 0.0,
+      "citation_count": null
+    },
+    {
+      "endpoint": "/search",
+      "status_code": 200,
+      "elapsed_ms": 1932.8374999968219,
+      "ok": true,
+      "error_code": null,
+      "reranked": true,
+      "rank_changed_ratio": 0.0,
+      "citation_count": null
+    },
+    {
+      "endpoint": "/search",
+      "status_code": 200,
+      "elapsed_ms": 1917.579900000419,
+      "ok": true,
+      "error_code": null,
+      "reranked": true,
+      "rank_changed_ratio": 0.0,
+      "citation_count": null
+    },
+    {
+      "endpoint": "/search",
+      "status_code": 200,
+      "elapsed_ms": 2034.9831999992603,
+      "ok": true,
+      "error_code": null,
+      "reranked": true,
+      "rank_changed_ratio": 0.0,
+      "citation_count": null
+    },
+    {
+      "endpoint": "/search",
+      "status_code": 200,
+      "elapsed_ms": 2410.5724999972153,
+      "ok": true,
+      "error_code": null,
+      "reranked": true,
+      "rank_changed_ratio": 0.0,
+      "citation_count": null
+    },
+    {
+      "endpoint": "/search",
+      "status_code": 200,
+      "elapsed_ms": 1942.144599997846,
+      "ok": true,
+      "error_code": null,
+      "reranked": true,
+      "rank_changed_ratio": 0.0,
+      "citation_count": null
+    },
+    {
+      "endpoint": "/search",
+      "status_code": 200,
+      "elapsed_ms": 1916.7704999999842,
+      "ok": true,
+      "error_code": null,
+      "reranked": true,
+      "rank_changed_ratio": 0.0,
+      "citation_count": null
+    },
+    {
+      "endpoint": "/search",
+      "status_code": 200,
+      "elapsed_ms": 1779.5518999992055,
+      "ok": true,
+      "error_code": null,
+      "reranked": true,
+      "rank_changed_ratio": 0.0,
+      "citation_count": null
+    },
+    {
+      "endpoint": "/answer",
+      "status_code": 200,
+      "elapsed_ms": 3054.9107999977423,
+      "ok": true,
+      "error_code": null,
+      "reranked": null,
+      "rank_changed_ratio": null,
+      "citation_count": 5
+    },
+    {
+      "endpoint": "/answer",
+      "status_code": 200,
+      "elapsed_ms": 2801.523800000723,
+      "ok": true,
+      "error_code": null,
+      "reranked": null,
+      "rank_changed_ratio": null,
+      "citation_count": 5
+    },
+    {
+      "endpoint": "/answer",
+      "status_code": 200,
+      "elapsed_ms": 3405.8638000024075,
+      "ok": true,
+      "error_code": null,
+      "reranked": null,
+      "rank_changed_ratio": null,
+      "citation_count": 5
+    },
+    {
+      "endpoint": "/answer",
+      "status_code": 200,
+      "elapsed_ms": 2817.572399999335,
+      "ok": true,
+      "error_code": null,
+      "reranked": null,
+      "rank_changed_ratio": null,
+      "citation_count": 5
+    },
+    {
+      "endpoint": "/answer",
+      "status_code": 200,
+      "elapsed_ms": 3191.502900001069,
+      "ok": true,
+      "error_code": null,
+      "reranked": null,
+      "rank_changed_ratio": null,
+      "citation_count": 5
+    },
+    {
+      "endpoint": "/conversations/{id}/messages",
+      "status_code": 200,
+      "elapsed_ms": 3138.60090000162,
+      "ok": true,
+      "error_code": null,
+      "reranked": null,
+      "rank_changed_ratio": null,
+      "citation_count": 5
+    },
+    {
+      "endpoint": "/conversations/{id}/messages",
+      "status_code": 200,
+      "elapsed_ms": 2662.85020000214,
+      "ok": true,
+      "error_code": null,
+      "reranked": null,
+      "rank_changed_ratio": null,
+      "citation_count": 5
+    },
+    {
+      "endpoint": "/conversations/{id}/messages",
+      "status_code": 200,
+      "elapsed_ms": 3880.457100000058,
+      "ok": true,
+      "error_code": null,
+      "reranked": null,
+      "rank_changed_ratio": null,
+      "citation_count": 5
+    }
+  ]
+}

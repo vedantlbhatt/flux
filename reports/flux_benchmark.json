@@ -1,0 +1,230 @@
+{
+  "meta": {
+    "base_url": "http://localhost:8000",
+    "queries_count": 10,
+    "loops": 1
+  },
+  "summaries": [
+    {
+      "endpoint": "/answer",
+      "requests": 5,
+      "success_rate": 0.0,
+      "p50_ms": 2.437400002236245,
+      "p95_ms": 2.922800002124859,
+      "p99_ms": 2.922800002124859,
+      "avg_ms": 2.5441000012506265,
+      "error_rate": 1.0,
+      "reranked_false_rate": null,
+      "avg_rank_changed_ratio": null,
+      "avg_citations": 0.0
+    },
+    {
+      "endpoint": "/conversations/{id}/messages",
+      "requests": 3,
+      "success_rate": 0.0,
+      "p50_ms": 2.7133000003232155,
+      "p95_ms": 2.7979000005871058,
+      "p99_ms": 2.7979000005871058,
+      "avg_ms": 2.5465333334674747,
+      "error_rate": 1.0,
+      "reranked_false_rate": null,
+      "avg_rank_changed_ratio": null,
+      "avg_citations": 0.0
+    },
+    {
+      "endpoint": "/search",
+      "requests": 10,
+      "success_rate": 0.0,
+      "p50_ms": 2.901100000599399,
+      "p95_ms": 4.085299999132985,
+      "p99_ms": 4.085299999132985,
+      "avg_ms": 3.0510799999319715,
+      "error_rate": 1.0,
+      "reranked_false_rate": null,
+      "avg_rank_changed_ratio": 0.0,
+      "avg_citations": null
+    }
+  ],
+  "runs": [
+    {
+      "endpoint": "/search",
+      "status_code": 502,
+      "elapsed_ms": 4.085299999132985,
+      "ok": false,
+      "error_code": "TAVILY_ERROR",
+      "reranked": null,
+      "rank_changed_ratio": 0.0,
+      "citation_count": null
+    },
+    {
+      "endpoint": "/search",
+      "status_code": 502,
+      "elapsed_ms": 2.8794999998353887,
+      "ok": false,
+      "error_code": "TAVILY_ERROR",
+      "reranked": null,
+      "rank_changed_ratio": 0.0,
+      "citation_count": null
+    },
+    {
+      "endpoint": "/search",
+      "status_code": 502,
+      "elapsed_ms": 3.3887999998114537,
+      "ok": false,
+      "error_code": "TAVILY_ERROR",
+      "reranked": null,
+      "rank_changed_ratio": 0.0,
+      "citation_count": null
+    },
+    {
+      "endpoint": "/search",
+      "status_code": 502,
+      "elapsed_ms": 2.6910000015050173,
+      "ok": false,
+      "error_code": "TAVILY_ERROR",
+      "reranked": null,
+      "rank_changed_ratio": 0.0,
+      "citation_count": null
+    },
+    {
+      "endpoint": "/search",
+      "status_code": 502,
+      "elapsed_ms": 3.308299998025177,
+      "ok": false,
+      "error_code": "TAVILY_ERROR",
+      "reranked": null,
+      "rank_changed_ratio": 0.0,
+      "citation_count": null
+    },
+    {
+      "endpoint": "/search",
+      "status_code": 502,
+      "elapsed_ms": 2.901100000599399,
+      "ok": false,
+      "error_code": "TAVILY_ERROR",
+      "reranked": null,
+      "rank_changed_ratio": 0.0,
+      "citation_count": null
+    },
+    {
+      "endpoint": "/search",
+      "status_code": 502,
+      "elapsed_ms": 3.106599997408921,
+      "ok": false,
+      "error_code": "TAVILY_ERROR",
+      "reranked": null,
+      "rank_changed_ratio": 0.0,
+      "citation_count": null
+    },
+    {
+      "endpoint": "/search",
+      "status_code": 502,
+      "elapsed_ms": 2.587800001492724,
+      "ok": false,
+      "error_code": "TAVILY_ERROR",
+      "reranked": null,
+      "rank_changed_ratio": 0.0,
+      "citation_count": null
+    },
+    {
+      "endpoint": "/search",
+      "status_code": 502,
+      "elapsed_ms": 2.6579000004858244,
+      "ok": false,
+      "error_code": "TAVILY_ERROR",
+      "reranked": null,
+      "rank_changed_ratio": 0.0,
+      "citation_count": null
+    },
+    {
+      "endpoint": "/search",
+      "status_code": 502,
+      "elapsed_ms": 2.904500001022825,
+      "ok": false,
+      "error_code": "TAVILY_ERROR",
+      "reranked": null,
+      "rank_changed_ratio": 0.0,
+      "citation_count": null
+    },
+    {
+      "endpoint": "/answer",
+      "status_code": 502,
+      "elapsed_ms": 2.6904000005743,
+      "ok": false,
+      "error_code": "TAVILY_ERROR",
+      "reranked": null,
+      "rank_changed_ratio": null,
+      "citation_count": 0
+    },
+    {
+      "endpoint": "/answer",
+      "status_code": 502,
+      "elapsed_ms": 2.922800002124859,
+      "ok": false,
+      "error_code": "TAVILY_ERROR",
+      "reranked": null,
+      "rank_changed_ratio": null,
+      "citation_count": 0
+    },
+    {
+      "endpoint": "/answer",
+      "status_code": 502,
+      "elapsed_ms": 2.370600002905121,
+      "ok": false,
+      "error_code": "TAVILY_ERROR",
+      "reranked": null,
+      "rank_changed_ratio": null,
+      "citation_count": 0
+    },
+    {
+      "endpoint": "/answer",
+      "status_code": 502,
+      "elapsed_ms": 2.437400002236245,
+      "ok": false,
+      "error_code": "TAVILY_ERROR",
+      "reranked": null,
+      "rank_changed_ratio": null,
+      "citation_count": 0
+    },
+    {
+      "endpoint": "/answer",
+      "status_code": 502,
+      "elapsed_ms": 2.2992999984126072,
+      "ok": false,
+      "error_code": "TAVILY_ERROR",
+      "reranked": null,
+      "rank_changed_ratio": null,
+      "citation_count": 0
+    },
+    {
+      "endpoint": "/conversations/{id}/messages",
+      "status_code": 502,
+      "elapsed_ms": 2.7133000003232155,
+      "ok": false,
+      "error_code": "TAVILY_ERROR",
+      "reranked": null,
+      "rank_changed_ratio": null,
+      "citation_count": 0
+    },
+    {
+      "endpoint": "/conversations/{id}/messages",
+      "status_code": 502,
+      "elapsed_ms": 2.7979000005871058,
+      "ok": false,
+      "error_code": "TAVILY_ERROR",
+      "reranked": null,
+      "rank_changed_ratio": null,
+      "citation_count": 0
+    },
+    {
+      "endpoint": "/conversations/{id}/messages",
+      "status_code": 502,
+      "elapsed_ms": 2.1283999994921032,
+      "ok": false,
+      "error_code": "TAVILY_ERROR",
+      "reranked": null,
+      "rank_changed_ratio": null,
+      "citation_count": 0
+    }
+  ]
+}
