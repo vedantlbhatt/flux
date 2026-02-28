@@ -20,7 +20,7 @@ async function main(): Promise<void> {
   const res = await tavilySearch(apiKey, {
     query,
     max_results: 10,
-    search_depth: "basic",
+    search_depth: "fast",
     include_answer: false,
     include_favicon: true,
   });
