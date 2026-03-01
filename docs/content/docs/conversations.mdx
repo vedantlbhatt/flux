@@ -18,19 +18,27 @@ Turn 2 and 3 are resolved using prior context.
 
 ## Endpoints
 
-### `POST /conversations`
+### Create conversation
 
 Creates a new conversation object.
 
-### `GET /conversations?page=1&page_size=20`
+Endpoint: `POST /conversations`
+
+### List conversations
+
+Endpoint: `GET /conversations?page=1&page_size=20`
 
 Returns paginated conversation summaries.
 
-### `GET /conversations/{id}`
+### Get conversation
+
+Endpoint: `GET /conversations/{id}`
 
 Returns the full conversation with messages and retrieval artifacts.
 
-### `POST /conversations/{id}/messages`
+### Add conversation message
+
+Endpoint: `POST /conversations/{id}/messages`
 
 Request body:
 
@@ -47,7 +55,9 @@ Behavior:
 - Synthesizes an answer with citations from top-ranked sources.
 - Persists message + citations + selected retrieval results.
 
-### `DELETE /conversations/{id}`
+### Delete conversation
+
+Endpoint: `DELETE /conversations/{id}`
 
 Deletes conversation state and returns `204`.
 

@@ -9,6 +9,7 @@ import { baseOptions, gitConfig } from '@/lib/layout.shared';
 import { useFumadocsLoader } from 'fumadocs-core/source/client';
 import { Suspense } from 'react';
 import { LLMCopyButton, ViewOptions } from '@/components/ai/page-actions';
+import { APIPage } from '@/components/api-page';
 
 export const Route = createFileRoute('/docs/$')({
   component: Page,
@@ -62,6 +63,7 @@ const clientLoader = browserCollections.docs.createClientLoader({
           <MDX
             components={{
               ...defaultMdxComponents,
+              APIPage,
             }}
           />
         </DocsBody>
@@ -74,7 +76,10 @@ function Page() {
   const data = useFumadocsLoader(Route.useLoaderData());
 
   return (
-    <DocsLayout {...baseOptions()} tree={data.pageTree}>
+    <DocsLayout
+      {...baseOptions()}
+      tree={data.pageTree}
+    >
       <Suspense>{clientLoader.useContent(data.path, data)}</Suspense>
     </DocsLayout>
   );

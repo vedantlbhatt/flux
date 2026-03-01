@@ -1,10 +1,9 @@
-import { baseOptions } from '@/lib/layout.shared';
 import { Link } from '@tanstack/react-router';
-import { HomeLayout } from 'fumadocs-ui/layouts/home';
+import { HomeShell } from '@/components/home-shell';
 
 export function NotFound() {
   return (
-    <HomeLayout {...baseOptions()}>
+    <HomeShell>
       <div className="flex flex-col justify-center flex-1 text-center items-center gap-4">
         <h1 className="text-6xl font-bold text-fd-muted-foreground">404</h1>
         <h2 className="text-2xl font-semibold">Page Not Found</h2>
@@ -19,6 +18,6 @@ export function NotFound() {
           Back to Home
         </Link>
       </div>
-    </HomeLayout>
+    </HomeShell>
   );
 }

@@ -10,7 +10,7 @@ export const gitConfig = {
 export function baseOptions(): BaseLayoutProps {
   return {
     nav: {
-      title: 'Tanstack Start',
+      title: 'Flux Documentation',
     },
     githubUrl: `https://github.com/${gitConfig.user}/${gitConfig.repo}`,
   };
