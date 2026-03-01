@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 import time
 from dataclasses import asdict, dataclass
 
@@ -84,6 +85,13 @@ def _extractive_answer(sources: list[tuple[str, str]], max_sources: int = 3) -> 
     return " ".join(chunks).strip()
 
 
+def _safe_error_message(error: Exception) -> str:
+    """Redact sensitive tokens from provider errors before writing artifacts."""
+    text = str(error)
+    text = re.sub(r"([?&]key=)[^&\\s'\"\\n]+", r"\1<redacted>", text)
+    return text
+
+
 class BaselineRAGApp:
     """Baseline app: Tavily retrieval in native order + shared synthesis."""
 
@@ -131,7 +139,7 @@ class BaselineRAGApp:
             )
         except Exception as e:
             total_ms = (time.perf_counter() - total_start) * 1000
-            return AppResult(self.name, False, str(e), "", [], 0.0, 0.0, total_ms)
+            return AppResult(self.name, False, _safe_error_message(e), "", [], 0.0, 0.0, total_ms)
 
 
 class FluxRAGApp:
@@ -151,7 +159,7 @@ class FluxRAGApp:
                 resp = client.get(f"{self.base_url}/search", params={"q": query, "limit": 10})
             retrieval_ms = (time.perf_counter() - retrieval_start) * 1000
             if resp.status_code >= 400:
-                return AppResult(self.name, False, f"/search failed: {resp.status_code} {resp.text}", "", [], retrieval_ms, 0.0, retrieval_ms)
+                return AppResult(self.name, False, f"/search failed: {resp.status_code}", "", [], retrieval_ms, 0.0, retrieval_ms)
 
             payload = resp.json()
             results = payload.get("results") or []
@@ -185,7 +193,7 @@ class FluxRAGApp:
             )
         except Exception as e:
             total_ms = (time.perf_counter() - total_start) * 1000
-            return AppResult(self.name, False, str(e), "", [], 0.0, 0.0, total_ms)
+            return AppResult(self.name, False, _safe_error_message(e), "", [], 0.0, 0.0, total_ms)
 
 
 def synthesis_model_name() -> str:
