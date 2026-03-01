@@ -44,6 +44,25 @@ curl -s -X POST "http://localhost:8000/conversations/$CONV/messages" \
   -H "Content-Type: application/json" -d '{"query": "What is Python?"}'
 ```
 
+### Demo (60-second walkthrough)
+
+With the server running, run the script to hit every capability: health → search → answer → stateful conversation (2 turns) → error handling.
+
+```bash
+chmod +x demo.sh
+./demo.sh
+```
+
+Uses `BASE_URL=http://localhost:8000` by default; set `BASE_URL` if your server is elsewhere (e.g. a deployed URL for a live demo).
+
+**Demo website (chatbot UI using all endpoints):** A small static app in `demo/` provides a multi-conversation chatbot plus panels for Search, Quick answer, and Extract URLs. With the API running, serve the demo and open in a browser:
+
+```bash
+npx serve demo
+```
+
+Then open the URL shown (e.g. http://localhost:3000). See `demo/README.md` for which endpoint each part of the UI calls.
+
 ## API reference
 
 All endpoints return JSON. Errors use a consistent shape: `{"error": "<message>", "code": "<CODE>"}` with appropriate HTTP status (400, 404, 413, 502, etc.).
