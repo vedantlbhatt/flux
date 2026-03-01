@@ -1,10 +1,18 @@
 """Gemini API client for answer synthesis. Retries on 429/503/500."""
+import logging
+
 import httpx
 
+import config
 from utils.retry import retry_http
 
-MODEL = "gemini-2.5-flash-lite"
-GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent"
+logger = logging.getLogger(__name__)
+
+MODEL = config.GEMINI_MODEL  # for response metadata and experiments
+
+
+def _gemini_url() -> str:
+    return f"https://generativelanguage.googleapis.com/v1beta/models/{config.GEMINI_MODEL}:generateContent"
 
 
 def gemini_generate(api_key: str, prompt: str, *, max_tokens: int = 512) -> str:
@@ -12,9 +20,13 @@ def gemini_generate(api_key: str, prompt: str, *, max_tokens: int = 512) -> str:
     Call Gemini generateContent. Returns the generated text.
     Raises httpx.HTTPStatusError on failure.
     """
-    url = f"{GEMINI_URL}?key={api_key}"
+    prompt = (prompt or "").strip()
+    if not prompt:
+        raise ValueError("Gemini prompt must not be empty")
+
+    url = f"{_gemini_url()}?key={api_key}"
     body = {
-        "contents": [{"parts": [{"text": prompt}]}],
+        "contents": [{"role": "user", "parts": [{"text": prompt}]}],
         "generationConfig": {
             "maxOutputTokens": max_tokens,
             "temperature": 0.3,
@@ -23,6 +35,13 @@ def gemini_generate(api_key: str, prompt: str, *, max_tokens: int = 512) -> str:
     with httpx.Client(timeout=60.0) as client:
         def do_request():
             resp = client.post(url, json=body)
+            if not resp.is_success:
+                try:
+                    err_body = resp.text
+                    if err_body:
+                        logger.warning("Gemini API error response: %s", err_body[:500])
+                except Exception:
+                    pass
             resp.raise_for_status()
             return resp.json()
         data = retry_http(do_request)

@@ -119,4 +119,6 @@ def answer(
         for r in top5
     ]
 
-    return AnswerResponse(query=q.strip(), answer=answer_text, citations=citations)
+    return AnswerResponse(
+        query=q.strip(), answer=answer_text, citations=citations, model=config.GEMINI_MODEL
+    )

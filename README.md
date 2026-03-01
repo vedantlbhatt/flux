@@ -11,6 +11,15 @@ Live web search API with semantic reranking and multi-turn conversations. Query 
 1. Get an API key from [Tavily](https://docs.tavily.com/).
 2. Copy `.env.example` to `.env` and set `TAVILY_API_KEY`.
 3. For **answer** and **conversations** endpoints, set `GEMINI_API_KEY` in `.env` ([get one](https://aistudio.google.com/app/apikey)).
+   - Key must be from **Google AI Studio** (aistudio.google.com), not only Google Cloud.
+   - If you get 400 from Gemini: run the command below from the project directory to test the key in `.env` and see Google’s exact error.
+   ```bash
+   # From repo root: uses GEMINI_API_KEY from .env
+   curl -s "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=$(grep '^GEMINI_API_KEY=' .env | cut -d= -f2-)" \
+     -H "Content-Type: application/json" \
+     -d '{"contents":[{"role":"user","parts":[{"text":"Say hi"}]}]}'
+   ```
+   If it works you’ll see JSON with `"candidates"`. If not, the response body is the exact reason (e.g. `"API key not valid"`, `"not available in your region"`).
 4. Optional: set `COHERE_API_KEY` for reranking ([dashboard.cohere.com](https://dashboard.cohere.com/)).
 
 ```bash

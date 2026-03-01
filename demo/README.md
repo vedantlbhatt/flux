@@ -2,7 +2,7 @@
 
 A minimal web UI that uses **every Flux endpoint** in a natural way: multi-conversation chatbot plus optional “try other endpoints” panels.
 
-## What it uses
+## What it uses (all 9 endpoints)
 
 | Endpoint | Where in the demo |
 |---------|-------------------|

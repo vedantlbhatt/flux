@@ -21,6 +21,8 @@ from utils.safe_errors import (
 )
 
 logging.basicConfig(level=getattr(logging, config.LOG_LEVEL, logging.INFO))
+# Prevent httpx from logging full request URLs (which include API keys)
+logging.getLogger("httpx").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
 
 

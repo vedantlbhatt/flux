@@ -1,3 +1,15 @@
+/**
+ * Flux API Demo — uses all 9 endpoints:
+ *   GET  /health                    → checkHealth (on load + "Check health" button)
+ *   GET  /search?q=&limit=          → "Search" modal, runSearch button
+ *   GET  /answer?q=                 → "Quick answer" modal, runAnswer button
+ *   GET  /contents?urls=            → "Extract URLs" modal, runContents button
+ *   POST /conversations             → "+ New conversation" button
+ *   GET  /conversations?page=&page_size= → loadConversations (on load, after create/delete/send)
+ *   GET  /conversations/:id         → clicking a conversation in the list
+ *   POST /conversations/:id/messages → sending a message in the chat
+ *   DELETE /conversations/:id       → trash button on a conversation
+ */
 (function () {
   const $ = (id) => document.getElementById(id);
 
