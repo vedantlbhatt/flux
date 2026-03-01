@@ -1,11 +1,7 @@
-<<<<<<< HEAD
-"""Tavily Extract API client. Raises on non-200. Retries on 429/503/500."""
-=======
-"""Tavily Extract API client. Raises on non-200.
+"""Tavily Extract API client. Raises on non-200. Retries on 429/503/500.
 
 Fetches and extracts clean text from given URLs; used by GET /contents.
 """
->>>>>>> da55ba4 (chore: comments)
 import httpx
 
 from utils.retry import retry_http
