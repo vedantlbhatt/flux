@@ -11,6 +11,15 @@ Live web search API with semantic reranking and multi-turn conversations. Query 
 1. Get an API key from [Tavily](https://docs.tavily.com/).
 2. Copy `.env.example` to `.env` and set `TAVILY_API_KEY`.
 3. For **answer** and **conversations** endpoints, set `GEMINI_API_KEY` in `.env` ([get one](https://aistudio.google.com/app/apikey)).
+   - Key must be from **Google AI Studio** (aistudio.google.com), not only Google Cloud.
+   - If you get 400 from Gemini: run the command below from the project directory to test the key in `.env` and see Google’s exact error.
+   ```bash
+   # From repo root: uses GEMINI_API_KEY from .env
+   curl -s "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=$(grep '^GEMINI_API_KEY=' .env | cut -d= -f2-)" \
+     -H "Content-Type: application/json" \
+     -d '{"contents":[{"role":"user","parts":[{"text":"Say hi"}]}]}'
+   ```
+   If it works you’ll see JSON with `"candidates"`. If not, the response body is the exact reason (e.g. `"API key not valid"`, `"not available in your region"`).
 4. Optional: set `COHERE_API_KEY` for reranking ([dashboard.cohere.com](https://dashboard.cohere.com/)).
 
 ```bash
@@ -43,6 +52,25 @@ CONV=$(curl -s -X POST http://localhost:8000/conversations | jq -r '.id')
 curl -s -X POST "http://localhost:8000/conversations/$CONV/messages" \
   -H "Content-Type: application/json" -d '{"query": "What is Python?"}'
 ```
+
+### Demo (60-second walkthrough)
+
+With the server running, run the script to hit every capability: health → search → answer → stateful conversation (2 turns) → error handling.
+
+```bash
+chmod +x demo.sh
+./demo.sh
+```
+
+Uses `BASE_URL=http://localhost:8000` by default; set `BASE_URL` if your server is elsewhere (e.g. a deployed URL for a live demo).
+
+**Demo website (chatbot UI using all endpoints):** A small static app in `demo/` provides a multi-conversation chatbot plus panels for Search, Quick answer, and Extract URLs. With the API running, serve the demo and open in a browser:
+
+```bash
+npx serve demo
+```
+
+Then open the URL shown (e.g. http://localhost:3000). See `demo/README.md` for which endpoint each part of the UI calls.
 
 ## API reference
 

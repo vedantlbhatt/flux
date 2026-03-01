@@ -21,6 +21,8 @@ from utils.safe_errors import (
 )
 
 logging.basicConfig(level=getattr(logging, config.LOG_LEVEL, logging.INFO))
+# Prevent httpx from logging full request URLs (which include API keys)
+logging.getLogger("httpx").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
 
 
@@ -28,6 +30,8 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     """Startup: log. Shutdown: brief wait for in-flight requests."""
     logger.info("Flux API starting")
+    if config.CORS_ORIGINS:
+        logger.info("CORS enabled for origins: %s", config.CORS_ORIGINS)
     yield
     logger.info("Flux API shutting down, waiting for in-flight requests...")
     await asyncio.sleep(3)
@@ -46,8 +50,9 @@ if config.CORS_ORIGINS:
         CORSMiddleware,
         allow_origins=config.CORS_ORIGINS if "*" not in config.CORS_ORIGINS else ["*"],
         allow_credentials=True,
-        allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
+        allow_methods=["GET", "POST", "DELETE", "OPTIONS", "HEAD"],
         allow_headers=["*"],
+        expose_headers=["*"],
     )
 
 

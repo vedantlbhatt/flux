@@ -1,0 +1,400 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background: #0f0f12;
+  color: #e4e4e7;
+  min-height: 100vh;
+}
+
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 280px;
+  background: #18181b;
+  border-right: 1px solid #27272a;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  gap: 1.25rem;
+}
+
+.sidebar-header {
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #27272a;
+}
+
+.sidebar-header h1 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.subtitle {
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+  color: #71717a;
+}
+
+.api-config {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.api-config label,
+.tools-label,
+.conv-list-label {
+  font-size: 0.75rem;
+  color: #a1a1aa;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.api-config input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #3f3f46;
+  border-radius: 6px;
+  background: #27272a;
+  color: #e4e4e7;
+  font-size: 0.875rem;
+}
+
+.api-config input:focus {
+  outline: none;
+  border-color: #6366f1;
+}
+
+.health-status {
+  font-size: 0.8rem;
+  min-height: 1.2rem;
+}
+
+.health-status.ok {
+  color: #22c55e;
+}
+
+.health-status.err {
+  color: #ef4444;
+}
+
+.conversations-section,
+.tools-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.conversation-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.conversation-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.conversation-list li:hover {
+  background: #27272a;
+}
+
+.conversation-list li.active {
+  background: #3f3f46;
+}
+
+.conversation-list .conv-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.conversation-list .conv-delete {
+  opacity: 0.5;
+  padding: 0.2rem;
+  border: none;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.conversation-list .conv-delete:hover {
+  opacity: 1;
+  background: #52525b;
+}
+
+.tools-section {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid #27272a;
+}
+
+/* Buttons */
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+}
+
+.btn.full {
+  width: 100%;
+}
+
+.btn-primary {
+  background: #6366f1;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #4f46e5;
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: #a1a1aa;
+}
+
+.btn-ghost:hover {
+  background: #27272a;
+  color: #e4e4e7;
+}
+
+/* Main chat area */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.chat-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  max-width: 720px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.chat-placeholder {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #71717a;
+  text-align: center;
+}
+
+.chat-placeholder .hint {
+  font-size: 0.85rem;
+  max-width: 360px;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-bottom: 1rem;
+}
+
+.message {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.message.user .message-role {
+  color: #818cf8;
+}
+
+.message.assistant .message-role {
+  color: #34d399;
+}
+
+.message-role {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.message-content {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.message-meta {
+  font-size: 0.75rem;
+  color: #71717a;
+}
+
+.message-meta a {
+  color: #818cf8;
+  text-decoration: none;
+}
+
+.message-meta a:hover {
+  text-decoration: underline;
+}
+
+.citations-list {
+  margin-top: 0.5rem;
+  padding-left: 1rem;
+}
+
+.citations-list li {
+  margin: 0.2rem 0;
+}
+
+.chat-input-area {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-end;
+  padding-top: 0.75rem;
+  border-top: 1px solid #27272a;
+}
+
+#messageInput {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid #3f3f46;
+  border-radius: 8px;
+  background: #18181b;
+  color: #e4e4e7;
+  font: inherit;
+  resize: none;
+  min-height: 44px;
+  max-height: 120px;
+}
+
+#messageInput:focus {
+  outline: none;
+  border-color: #6366f1;
+}
+
+#sendMessage {
+  flex-shrink: 0;
+}
+
+.loading {
+  color: #71717a;
+  font-style: italic;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 1rem;
+}
+
+.modal {
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #27272a;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.modal-body {
+  padding: 1.25rem;
+  overflow-y: auto;
+}
+
+.tool-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.tool-panel label {
+  font-size: 0.8rem;
+  color: #a1a1aa;
+}
+
+.tool-panel input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #3f3f46;
+  border-radius: 6px;
+  background: #27272a;
+  color: #e4e4e7;
+  font-size: 0.875rem;
+}
+
+.tool-panel input:focus {
+  outline: none;
+  border-color: #6366f1;
+}
+
+.api-result {
+  margin: 0;
+  padding: 1rem;
+  background: #0f0f12;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.api-result.empty {
+  color: #71717a;
+}
+
+.api-result.error {
+  color: #f87171;
+}

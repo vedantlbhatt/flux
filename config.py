@@ -8,6 +8,7 @@ load_dotenv()
 TAVILY_API_KEY: str | None = os.environ.get("TAVILY_API_KEY", "").strip() or None
 COHERE_API_KEY: str | None = os.environ.get("COHERE_API_KEY", "").strip() or None
 GEMINI_API_KEY: str | None = os.environ.get("GEMINI_API_KEY", "").strip() or None
+GEMINI_MODEL: str = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash").strip() or "gemini-2.5-flash"
 
 LOG_LEVEL: str = os.environ.get("LOG_LEVEL", "INFO").strip().upper()
 if LOG_LEVEL not in ("DEBUG", "INFO", "WARNING", "ERROR"):
