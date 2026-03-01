@@ -4,6 +4,8 @@ Only this module reads/writes the store. Resets on server restart; no persistenc
 """
 from typing import Any
 
+import config
+
 # conversation_id -> { id, created_at, message_count, messages }
 _conversations: dict[str, dict[str, Any]] = {}
 
