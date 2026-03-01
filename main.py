@@ -7,12 +7,15 @@ import logging
 import uuid
 from contextlib import asynccontextmanager
 
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse, RedirectResponse
 
 import config
 from routers import health, search, answer, contents, conversations
@@ -98,13 +101,23 @@ app.include_router(contents.router)
 app.include_router(conversations.router)
 
 
-from fastapi.responses import JSONResponse
-from utils.responses import PrettyJSONResponse
+@app.get("/")
+def root():
+    return {"message": "Flux API", "docs": "/docs", "demo": "/demo/", "health": "/health"}
+
+
+@app.get("/demo")
+def demo_redirect():
+    return RedirectResponse(url="/demo/", status_code=302)
+
+
+# Serve demo UI at /demo/ (same origin when deployed on Railway etc.)
+_demo_dir = Path(__file__).resolve().parent / "demo"
+if _demo_dir.is_dir():
+    app.mount("/demo", StaticFiles(directory=str(_demo_dir), html=True), name="demo")
 
 
 # --- Global error handlers: all errors return { error, code } with correct status ---
-
-
 @app.exception_handler(RequestValidationError)
 async def validation_handler(request, exc: RequestValidationError):
     """Invalid request body or query params → 400 INVALID_BODY."""

@@ -1,48 +1,43 @@
 # Flux API Demo
 
-A minimal web UI that uses **every Flux endpoint** in a natural way: multi-conversation chatbot plus optional “try other endpoints” panels.
+A chat-style web UI for the Flux API: Next.js, React, Tailwind, and shadcn-style components. Monochrome, docs-inspired layout with conversation list (grouped by Today / Last 7 days / Older), message bubbles with citations, and composer with suggestion chips.
 
-## What it uses (all 9 endpoints)
+## Stack
 
-| Endpoint | Where in the demo |
-|---------|-------------------|
-| `GET /health` | Sidebar: “Check health” and on load |
-| `GET /conversations` | Sidebar: list of conversations (paginated) |
-| `POST /conversations` | “+ New conversation” |
-| `GET /conversations/:id` | Selecting a conversation loads messages |
-| `POST /conversations/:id/messages` | Sending a message in the chat (context-aware answer) |
-| `DELETE /conversations/:id` | Trash icon on each conversation |
-| `GET /search` | Sidebar: “Search (GET /search)” → modal with query + limit |
-| `GET /answer` | Sidebar: “Quick answer (GET /answer)” → modal with question |
-| `GET /contents` | Sidebar: “Extract URLs (GET /contents)” → modal with comma-separated URLs |
+- **Next.js 14** (App Router)
+- **React 18**
+- **Tailwind CSS** (design tokens: grayscale theme)
+- **shadcn-style UI** (Radix primitives + CVA)
+- **lucide-react** icons
 
-## Run it
+## Run locally
 
-1. Start the Flux API (from repo root):
+1. From this directory (`demo/`):
 
    ```bash
-   bun run api
+   npm install
+   npm run dev
    ```
 
-2. If the demo is served from a different origin (e.g. `npx serve demo` → http://localhost:3000), set CORS in your API `.env` so the browser can call the API:
+2. Open [http://localhost:3000](http://localhost:3000).
 
-   ```
-   CORS_ORIGINS=http://localhost:3000
-   ```
-   Or use `CORS_ORIGINS=*` to allow any origin.
+3. Ensure the Flux API is running and CORS allows this origin (e.g. `CORS_ORIGINS=http://localhost:3000` or `CORS_ORIGINS=*`). The app uses the same API URL logic as the original demo (localhost when on localhost, else the default Railway URL).
 
-3. Serve the demo (from repo root):
+## Deploy (Vercel)
 
-   ```bash
-   npx serve demo
-   ```
+- Set your Vercel project **Root Directory** to `demo` so the build runs from this folder.
+- Build command: `npm run build` (default for Next.js).
+- No env vars required on Vercel; the API URL is resolved in the client as in the original demo.
 
-4. Open the URL shown (e.g. http://localhost:3000). Set **API base URL** in the sidebar if your API is not at `http://localhost:8000` (e.g. a deployed URL).
+## Endpoints used
 
-## Flow
+| Endpoint | Usage |
+|----------|--------|
+| `GET /health` | Sidebar status badge |
+| `GET /conversations` | Conversation list (paginated) |
+| `POST /conversations` | New chat |
+| `GET /conversations/:id` | Load conversation and messages |
+| `POST /conversations/:id/messages` | Send message (context-aware answer) |
+| `DELETE /conversations/:id` | Delete from list or header menu |
 
-- **Chat:** Create a conversation, send messages. Each message calls `POST /conversations/:id/messages` and shows the synthesized answer and citations.
-- **Multiple conversations:** Create several; switch between them; delete from the list.
-- **Other endpoints:** Use the sidebar buttons to open Search, Quick answer, or Extract URLs and see the raw API responses.
-
-No build step: plain HTML, CSS, and JavaScript.
+Search, Quick answer, and Extract URLs are not in this UI; add them as needed.

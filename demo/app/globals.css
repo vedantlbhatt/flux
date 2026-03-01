@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Monochrome theme: near-black background, layered grays */
+    --background: #0c0c0e;
+    --foreground: #fafafa;
+    --muted: #18181b;
+    --muted-foreground: #71717a;
+    --border: #27272a;
+    --card: #141416;
+    --card-foreground: #fafafa;
+    --radius: 6px;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 10px;
+  }
+
+  * {
+    @apply border-border box-border;
+  }
+
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply bg-background text-foreground min-h-screen;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
