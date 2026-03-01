@@ -163,7 +163,7 @@ function EmptyState() {
         Select a conversation or start a new one
       </p>
       <p className="mt-1 max-w-sm text-xs text-muted-foreground">
-        Messages use <strong>POST /conversations/:id/messages</strong> (context-aware search + answer).
+        Ask anything! Answers are grounded in live search and we remember context across turns.
       </p>
     </div>
   );
