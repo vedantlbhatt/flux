@@ -9,9 +9,30 @@
 | **Conversation** — multi-turn chat with context | `POST /conversations` → `POST /conversations/{id}/messages` |
 | **Extract** clean text from URLs | `GET /contents?urls=...` |
 
-All over HTTP. JSON in, JSON out. Test with cURL or Postman; optional demo UI at `/demo`.
+The API is **queryable over HTTP** and **operational on localhost** (see [Quick start](#quick-start-3-steps)). You can interact with it using **cURL** or **Postman**; all examples in this README are copy-pasteable. JSON in, JSON out. Optional demo UI at `/demo`.
 
-**Tech stack:** FastAPI, Tavily (search), Cohere (rerank), Google Gemini (synthesis). In-memory store—no database required.
+**Tech stack:** Python, FastAPI, Uvicorn, Pydantic, httpx, python-dotenv. Tavily (search + URL extraction), Cohere (rerank), Google Gemini (answer synthesis). In-memory conversation store—no database required. OpenAPI/Swagger at `/docs` for interactive try-it-out and Postman/Insomnia import.
+
+---
+
+## Submission requirements (Best Web API track)
+
+This README is the primary documentation. Here is where each requirement is covered:
+
+| Requirement | Where in this README |
+|-------------|----------------------|
+| **API with endpoints that perform a valuable action or expose useful data** | [All endpoints](#all-endpoints): search, answer, contents, conversations (create/list/get/delete, add messages). Live web retrieval, cited answers, context-aware state. |
+| **Interact with cURL or Postman** | [Quick start](#quick-start-3-steps) (cURL), [Quick test (cURL)](#quick-test-curl), [Example — 3-turn conversation](#example--3-turn-conversation). Postman: import `http://localhost:8000/openapi.json` (see [API server](#api-server)). |
+| **API queryable over HTTP; operational on localhost** | [Quick start](#quick-start-3-steps): run server at **http://localhost:8000**. All endpoints are HTTP (GET, POST, DELETE). |
+| **Publicly accessible (bonus)** | [Deploy on Railway](#deploy-on-railway): one deploy gives a public API URL plus `/docs` and `/demo`. |
+| **Documentation and usage examples** | This README: [Quick start](#quick-start-3-steps), [All endpoints](#all-endpoints), [When something goes wrong](#when-something-goes-wrong), [API design (in brief)](#api-design-in-brief), cURL examples throughout. |
+| **Hosted documentation page (bonus)** | Run the server → **http://localhost:8000/docs** (Swagger UI, try-it-out). Optional separate docs site in `docs/` (Fumadocs + Scalar). |
+| **Innovation, utility, entertainment value** | Solves a real need: grounded AI (live search + cited answers + multi-turn context) in 1–3 API calls instead of 8 steps and 200+ lines. |
+| **Endpoints return successful responses (HTTP 200 or equivalent) for valid data** | All documented endpoints return 2xx for valid input. Error paths return 4xx/5xx with a consistent body (see below). |
+| **Informative error messages/statuses; intuitive handling of edge cases** | [When something goes wrong](#when-something-goes-wrong): every error returns `{"error": "<message>", "code": "<CODE>"}` and the correct HTTP status. Full table of codes and when each fires. |
+| **Methods beyond GETs; state used in an interesting way (bonus)** | **POST** `/conversations` (create), **POST** `/conversations/{id}/messages` (add message); **DELETE** `/conversations/{id}`. State: conversations persist; each message uses conversation history so follow-ups (e.g. “when is it?”) are context-aware. |
+
+**Evaluation alignment:** Consistent resource naming; pagination on `GET /conversations`; filtering on `/search` and `/answer` (`topic`, `days`); POST to create with corresponding GET to list and GET by id; predictable errors so users can figure out why something went wrong. Tech stack explained above and in [Setup](#setup-detailed).
 
 ---
 
@@ -54,11 +75,6 @@ All over HTTP. JSON in, JSON out. Test with cURL or Postman; optional demo UI at
    ```
    If it works you’ll see JSON with `"candidates"`. If not, the response body is the exact reason (e.g. `"API key not valid"`, `"not available in your region"`).
 4. Optional: set `COHERE_API_KEY` for reranking ([dashboard.cohere.com](https://dashboard.cohere.com/)).
-
-```bash
-bun install
-bun run search "your query"
-```
 
 ## API server
 
@@ -164,6 +180,7 @@ Responses are JSON. Errors use a single shape: `{"error": "<message>", "code": "
 | `INVALID_TOPIC` | 400 | `topic` not `news` or `general` |
 | `INVALID_DAYS` | 400 | `days` &lt; 1 |
 | `INVALID_BODY` | 400 | Malformed or missing body |
+| `INVALID_PAGE` | 400 | `page` &lt; 1 or `page_size` out of range (1–100) on `GET /conversations` |
 | `CONVERSATION_NOT_FOUND` | 404 | No conversation for that `id` |
 | `NO_RESULTS` | 404 | Search returned nothing |
 | `TAVILY_ERROR` | 502 | Tavily API failure |
