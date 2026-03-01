@@ -33,6 +33,7 @@ def gemini_generate(api_key: str, prompt: str, *, max_tokens: int = 512) -> str:
         },
     }
     with httpx.Client(timeout=60.0) as client:
+<<<<<<< HEAD
         def do_request():
             resp = client.post(url, json=body)
             if not resp.is_success:
@@ -45,6 +46,12 @@ def gemini_generate(api_key: str, prompt: str, *, max_tokens: int = 512) -> str:
             resp.raise_for_status()
             return resp.json()
         data = retry_http(do_request)
+=======
+        resp = client.post(url, json=body)
+        resp.raise_for_status()
+        data = resp.json()
+    # Parse generateContent response: candidates[0].content.parts[0].text
+>>>>>>> da55ba4 (chore: comments)
     candidates = data.get("candidates") or []
     if not candidates:
         raise ValueError("Gemini returned no candidates")

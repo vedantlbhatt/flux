@@ -9,6 +9,7 @@ router = APIRouter(tags=["utility"])
 
 @router.get("/health", response_class=PrettyJSONResponse)
 def health() -> dict:
+    """Report API status and whether Tavily/Cohere keys are configured (no live check)."""
     return {
         "status": "ok",
         "cohere_ready": bool(config.COHERE_API_KEY),

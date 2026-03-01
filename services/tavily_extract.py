@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 """Tavily Extract API client. Raises on non-200. Retries on 429/503/500."""
+=======
+"""Tavily Extract API client. Raises on non-200.
+
+Fetches and extracts clean text from given URLs; used by GET /contents.
+"""
+>>>>>>> da55ba4 (chore: comments)
 import httpx
 
 from utils.retry import retry_http
@@ -7,7 +14,7 @@ TAVILY_EXTRACT_URL = "https://api.tavily.com/extract"
 
 
 def tavily_extract(api_key: str, urls: list[str], *, format: str = "markdown") -> dict:
-    """Extract content from URLs. Raises httpx.HTTPStatusError on failure."""
+    """Extract content from URLs. Returns raw_content per URL. Raises on HTTP failure."""
     body: dict = {
         "api_key": api_key,
         "urls": urls,

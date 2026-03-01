@@ -1,3 +1,4 @@
+"""Pydantic models for API request/response boundaries. No raw dict at boundaries."""
 from models.search import SearchResult, SearchResponse
 from models.answer import AnswerResponse, Citation
 from models.conversation import (
