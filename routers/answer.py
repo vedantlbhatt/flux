@@ -14,10 +14,17 @@ router = APIRouter(tags=["answer"])
 logger = logging.getLogger(__name__)
 
 
+SYSTEM_INSTRUCTION = (
+    "Reply to the user naturally. Use the sources below only when the user's question actually needs them. "
+    "For greetings (e.g. hi, hello), small talk, or simple questions that don't need web results, respond briefly and naturally—do not summarize or cite the sources, and do not give mini-essays on the origin of words or unrelated background from the sources."
+)
+
+
 def _build_prompt(query: str, sources: list[tuple[str, str]]) -> str:
     parts = [
-        "Answer the following question using only the sources provided.",
-        "Be concise. Cite sources by number [1], [2], etc.",
+        SYSTEM_INSTRUCTION,
+        "",
+        "When you do use the sources, cite them by number [1], [2], etc. Be concise.",
         "",
         f"Question: {query}",
         "",
