@@ -1,0 +1,49 @@
+{
+  "meta": {
+    "run_id": "a0c32455-6ce2-4777-9125-e7185cb57fd9",
+    "created_at": "2026-03-01T00:12:33.518879+00:00",
+    "dataset_path": "experiments\\offline_eval\\dataset\\questions.jsonl",
+    "systems": [
+      "baseline",
+      "flux"
+    ],
+    "flux_base_url": "http://127.0.0.1:8000",
+    "synthesis_model": "gemini-2.5-flash-lite"
+  },
+  "items": [
+    {
+      "id": "q001",
+      "query": "What is the latest US inflation trend in 2026?",
+      "category": "current_events",
+      "expected_keywords": [
+        "inflation",
+        "cpi",
+        "federal reserve"
+      ],
+      "results": {
+        "baseline": {
+          "system": "baseline",
+          "success": false,
+          "error": "Client error '429 Too Many Requests' for url 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=AIzaSyBNDH1-CZ7jFZjsaVU7cbamkrUPsNhMMEs'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429",
+          "answer": "",
+          "citations": [],
+          "retrieval_latency_ms": 0.0,
+          "synthesis_latency_ms": 0.0,
+          "total_latency_ms": 12870.929599997908,
+          "keyword_recall": null
+        },
+        "flux": {
+          "system": "flux",
+          "success": false,
+          "error": "Client error '429 Too Many Requests' for url 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=AIzaSyBNDH1-CZ7jFZjsaVU7cbamkrUPsNhMMEs'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429",
+          "answer": "",
+          "citations": [],
+          "retrieval_latency_ms": 0.0,
+          "synthesis_latency_ms": 0.0,
+          "total_latency_ms": 13214.52710000085,
+          "keyword_recall": null
+        }
+      }
+    }
+  ]
+}

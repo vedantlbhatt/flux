@@ -1,0 +1,10 @@
+{"id":"q001","category":"current_events","query":"What is the latest US inflation trend in 2026?","expected_keywords":["inflation","cpi","federal reserve"]}
+{"id":"q002","category":"ai_tools","query":"What are the best open-source LLM frameworks in 2025?","expected_keywords":["open-source","framework","llm"]}
+{"id":"q003","category":"economy","query":"What was the latest Federal Reserve rate decision?","expected_keywords":["rate","federal reserve","decision"]}
+{"id":"q004","category":"finance","query":"Why did SVB collapse?","expected_keywords":["svb","liquidity","interest rates"]}
+{"id":"q005","category":"semiconductors","query":"Summarize the latest NVIDIA earnings highlights.","expected_keywords":["nvidia","earnings","revenue"]}
+{"id":"q006","category":"standards","query":"What is Model Context Protocol (MCP) in AI tooling?","expected_keywords":["mcp","protocol","tools"]}
+{"id":"q007","category":"webdev","query":"Top Python web frameworks in 2026 and when to use each.","expected_keywords":["python","framework","use"]}
+{"id":"q008","category":"agents","query":"What are the recent trends in open-source AI agents?","expected_keywords":["agents","open-source","automation"]}
+{"id":"q009","category":"sports","query":"Who won the latest Formula 1 race and why?","expected_keywords":["formula 1","race","winner"]}
+{"id":"q010","category":"ai_news","query":"What major AI model releases happened this month?","expected_keywords":["model","release","ai"]}
