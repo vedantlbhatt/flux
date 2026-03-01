@@ -3,6 +3,7 @@
 Pipeline: query → Tavily retrieval → Cohere rerank → return.
 Routers: health, search, answer, contents, conversations.
 """
+import asyncio
 import logging
 import uuid
 from contextlib import asynccontextmanager

@@ -24,6 +24,14 @@ npm run start
 
 Host the generated app on your platform of choice. Ensure the published URL is added to your root `README.md`.
 
+### API Reference (Scalar)
+
+The docs site includes an interactive OpenAPI reference at `/docs/openapi` (Scalar), with try-it-out and environment switching (Local / Production). To point it at your deployed API, set when building the docs:
+
+```bash
+VITE_FLUX_API_URL=https://your-flux-api.example.com npm run build
+```
+
 ## Production Checklist
 
 - Environment variables configured on host
