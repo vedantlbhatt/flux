@@ -7,6 +7,10 @@
   },
   "servers": [
     {
+      "url": "https://flux-production-9c9e.up.railway.app",
+      "description": "Production (Railway)"
+    },
+    {
       "url": "http://localhost:8000",
       "description": "Local development"
     }
