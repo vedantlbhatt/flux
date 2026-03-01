@@ -4,6 +4,7 @@ from models.search import SearchResult
 
 
 def _url_id(url: str) -> str:
+    """Stable short id for a URL (first 16 chars of SHA256)."""
     return hashlib.sha256(url.encode()).hexdigest()[:16]
 
 

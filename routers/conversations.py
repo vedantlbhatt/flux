@@ -50,12 +50,19 @@ def _validate_conversation_id(conversation_id: str) -> PrettyJSONResponse | None
     return None
 
 
+SYSTEM_INSTRUCTION = (
+    "Reply to the user naturally. Use the sources below only when the user's question actually needs them. "
+    "For greetings (e.g. hi, hello), small talk, or simple questions that don't need web results, respond briefly and naturally—do not summarize or cite the sources, and do not give mini-essays on the origin of words or unrelated background from the sources."
+)
+
+
 def _build_message_prompt(current_query: str, history: list[tuple[str, str]], sources: list[tuple[str, str]]) -> str:
     """Build prompt with conversation history and new sources."""
     parts = [
-        "Answer the following question using only the sources provided.",
+        SYSTEM_INSTRUCTION,
+        "",
+        "When you do use the sources, cite them by number [1], [2], etc. Be concise.",
         "You have context from previous turns in this conversation.",
-        "Be concise. Cite sources by number [1], [2], etc.",
         "",
     ]
     if history:
@@ -228,6 +235,7 @@ def add_message_endpoint(
             content={"error": "Gemini API key not configured", "code": "ANSWER_FAILED"},
         )
 
+    # Context-aware retrieval: last 3 queries + current → Tavily; rerank uses current only
     previous_queries = [m["query"] for m in conv.get("messages", [])]
     context_query = build_context_query(query, previous_queries, max_previous=3)
 

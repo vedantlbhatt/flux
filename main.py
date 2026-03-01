@@ -1,15 +1,21 @@
-"""Flux API — live web search with semantic reranking."""
-import asyncio
+"""Flux API — live web search with semantic reranking.
+
+Pipeline: query → Tavily retrieval → Cohere rerank → return.
+Routers: health, search, answer, contents, conversations.
+"""
 import logging
 import uuid
 from contextlib import asynccontextmanager
 
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse, RedirectResponse
 
 import config
 from routers import health, search, answer, contents, conversations
@@ -21,13 +27,14 @@ from utils.safe_errors import (
 )
 
 logging.basicConfig(level=getattr(logging, config.LOG_LEVEL, logging.INFO))
+# Prevent httpx from logging full request URLs (which include API keys)
+logging.getLogger("httpx").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Startup: log. Shutdown: brief wait for in-flight requests."""
-    logger.info("Flux API starting")
+    """App lifespan: no startup/shutdown logic; in-memory store resets on restart."""
     yield
     logger.info("Flux API shutting down, waiting for in-flight requests...")
     await asyncio.sleep(3)
@@ -46,8 +53,9 @@ if config.CORS_ORIGINS:
         CORSMiddleware,
         allow_origins=config.CORS_ORIGINS if "*" not in config.CORS_ORIGINS else ["*"],
         allow_credentials=True,
-        allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
+        allow_methods=["GET", "POST", "DELETE", "OPTIONS", "HEAD"],
         allow_headers=["*"],
+        expose_headers=["*"],
     )
 
 
@@ -93,14 +101,32 @@ app.include_router(contents.router)
 app.include_router(conversations.router)
 
 
+@app.get("/")
+def root():
+    return {"message": "Flux API", "docs": "/docs", "demo": "/demo/", "health": "/health"}
+
+
+@app.get("/demo")
+def demo_redirect():
+    return RedirectResponse(url="/demo/", status_code=302)
+
+
+# Serve demo UI at /demo/ (same origin when deployed on Railway etc.)
+_demo_dir = Path(__file__).resolve().parent / "demo"
+if _demo_dir.is_dir():
+    app.mount("/demo", StaticFiles(directory=str(_demo_dir), html=True), name="demo")
+
+
+# --- Global error handlers: all errors return { error, code } with correct status ---
 @app.exception_handler(RequestValidationError)
-async def validation_handler(request: Request, exc: RequestValidationError):
-    msg = validation_error_message(exc)
-    return PrettyJSONResponse(status_code=400, content={"error": msg, "code": "INVALID_BODY"})
+async def validation_handler(request, exc: RequestValidationError):
+    """Invalid request body or query params → 400 INVALID_BODY."""
+    return PrettyJSONResponse(status_code=400, content={"error": str(exc), "code": "INVALID_BODY"})
 
 
 @app.exception_handler(Exception)
-async def global_handler(request: Request, exc: Exception):
+async def global_handler(request, exc: Exception):
+    """Unhandled exception → 500 INTERNAL; log full traceback."""
     logger.exception("Unhandled exception")
     safe_msg = safe_internal_message()
     return PrettyJSONResponse(status_code=500, content={"error": safe_msg, "code": "INTERNAL"})

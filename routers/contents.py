@@ -1,4 +1,7 @@
-"""GET /contents — clean extracted text from specific URLs."""
+"""GET /contents — clean extracted text from specific URLs.
+
+Tavily extract; per-URL success/failure; optional cleanup for Wikipedia/boilerplate.
+"""
 import logging
 import re
 from urllib.parse import urlparse
@@ -81,6 +84,7 @@ def contents(
         )
 
     url_list = [u.strip() for u in urls.split(",") if u.strip()]
+    # Enforce max 10 URLs; partial failures per URL, not whole request
     if len(url_list) > 10:
         return PrettyJSONResponse(
             status_code=400,

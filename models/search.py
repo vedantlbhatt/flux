@@ -1,7 +1,10 @@
+"""Search response models: single result and full response with rerank flag."""
 from pydantic import BaseModel, Field
 
 
 class SearchResult(BaseModel):
+    """One reranked search hit: url, title, snippet, Cohere score, rank."""
+
     id: str = Field(description="Stable hash of url")
     url: str
     title: str
@@ -11,6 +14,8 @@ class SearchResult(BaseModel):
 
 
 class SearchResponse(BaseModel):
+    """Response for GET /search: query, results list, total count, reranked flag."""
+
     query: str
     results: list[SearchResult]
     total: int

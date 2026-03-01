@@ -14,10 +14,18 @@ router = APIRouter(tags=["answer"])
 logger = logging.getLogger(__name__)
 
 
+SYSTEM_INSTRUCTION = (
+    "Reply to the user naturally. Use the sources below only when the user's question actually needs them. "
+    "For greetings (e.g. hi, hello), small talk, or simple questions that don't need web results, respond briefly and naturally—do not summarize or cite the sources, and do not give mini-essays on the origin of words or unrelated background from the sources."
+)
+
+
 def _build_prompt(query: str, sources: list[tuple[str, str]]) -> str:
+    """Build system prompt: answer from sources only, cite by [1], [2], etc."""
     parts = [
-        "Answer the following question using only the sources provided.",
-        "Be concise. Cite sources by number [1], [2], etc.",
+        SYSTEM_INSTRUCTION,
+        "",
+        "When you do use the sources, cite them by number [1], [2], etc. Be concise.",
         "",
         f"Question: {query}",
         "",
@@ -44,6 +52,7 @@ def answer(
     topic: str | None = Query(None),
     days: int | None = Query(None, ge=1),
 ):
+    """Synthesized answer: search + rerank → top 5 → Gemini → answer + citations."""
     if not q or not q.strip():
         return PrettyJSONResponse(
             status_code=400,
@@ -112,4 +121,6 @@ def answer(
         for r in top5
     ]
 
-    return AnswerResponse(query=q.strip(), answer=answer_text, citations=citations)
+    return AnswerResponse(
+        query=q.strip(), answer=answer_text, citations=citations, model=config.GEMINI_MODEL
+    )

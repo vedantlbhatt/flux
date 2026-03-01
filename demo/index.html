@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Flux API Demo</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>Flux</h1>
+        <p class="subtitle">API Demo</p>
+      </div>
+
+      <div class="api-config">
+        <label for="baseUrl">API base URL</label>
+        <input id="baseUrl" type="text" value="https://flux-production-9c9e.up.railway.app" placeholder="API base URL" />
+        <button type="button" id="checkHealth" class="btn btn-ghost">Check health</button>
+        <div id="healthStatus" class="health-status"></div>
+      </div>
+
+      <div class="conversations-section">
+        <button type="button" id="newConversation" class="btn btn-primary full">+ New conversation</button>
+        <div class="conv-list-label">Conversations</div>
+        <ul id="conversationList" class="conversation-list"></ul>
+      </div>
+
+      <div class="tools-section">
+        <div class="tools-label">Try other endpoints</div>
+        <button type="button" id="openSearch" class="btn btn-ghost full">🔍 Search (GET /search)</button>
+        <button type="button" id="openAnswer" class="btn btn-ghost full">💬 Quick answer (GET /answer)</button>
+        <button type="button" id="openContents" class="btn btn-ghost full">📄 Extract URLs (GET /contents)</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div id="chatPanel" class="chat-panel">
+        <div id="chatPlaceholder" class="chat-placeholder">
+          <p>Select a conversation or start a new one.</p>
+          <p class="hint">Messages use <strong>POST /conversations/:id/messages</strong> (context-aware search + answer).</p>
+        </div>
+        <div id="chatMessages" class="chat-messages" style="display: none;"></div>
+        <div id="chatInputArea" class="chat-input-area" style="display: none;">
+          <textarea id="messageInput" rows="2" placeholder="Ask anything..."></textarea>
+          <button type="button" id="sendMessage" class="btn btn-primary">Send</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modals for Search, Answer, Contents -->
+  <div id="modalOverlay" class="modal-overlay" style="display: none;">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modalTitle">Modal</h2>
+        <button type="button" id="closeModal" class="btn btn-ghost">×</button>
+      </div>
+      <div class="modal-body">
+        <div id="modalSearch" class="tool-panel" style="display: none;">
+          <label>Query</label>
+          <input id="searchQuery" type="text" placeholder="e.g. HackIllinois 2026" />
+          <label>Limit (1–20)</label>
+          <input id="searchLimit" type="number" min="1" max="20" value="5" />
+          <button type="button" id="runSearch" class="btn btn-primary">GET /search</button>
+          <pre id="searchResult" class="api-result"></pre>
+        </div>
+        <div id="modalAnswer" class="tool-panel" style="display: none;">
+          <label>Question</label>
+          <input id="answerQuery" type="text" placeholder="e.g. What is FastAPI?" />
+          <button type="button" id="runAnswer" class="btn btn-primary">GET /answer</button>
+          <pre id="answerResult" class="api-result"></pre>
+        </div>
+        <div id="modalContents" class="tool-panel" style="display: none;">
+          <label>URLs (comma-separated, max 10)</label>
+          <input id="contentsUrls" type="text" placeholder="https://example.com, https://example.org" />
+          <button type="button" id="runContents" class="btn btn-primary">GET /contents</button>
+          <pre id="contentsResult" class="api-result"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

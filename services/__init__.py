@@ -1,3 +1,4 @@
+# Service layer: Tavily (retrieve), Cohere (rerank), reranker (merge), no business logic in routers
 from services.tavily import tavily_search
 from services.cohere_service import cohere_rerank
 from services.reranker import merge_and_rank, tavily_only_results
