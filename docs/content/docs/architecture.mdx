@@ -1,0 +1,54 @@
+---
+title: Architecture
+description: System responsibilities, request flow, and implementation boundaries.
+icon: Layers
+---
+
+## System Components
+
+- **FastAPI routers**: request validation, response typing, route orchestration.
+- **Services layer**: external API clients and composition logic.
+- **Reranker**: merges Tavily results with Cohere relevance ordering.
+- **Context builder**: conversation-history-aware query construction.
+- **Store**: in-memory conversation repository.
+
+## Responsibility Split
+
+```text
+Routers -> Services -> External Providers
+```
+
+- Routers should stay thin.
+- Provider-specific behavior is isolated in service modules.
+- Shared flow logic (`search_flow`) is reused across `/search`, `/answer`, and conversation message handling.
+
+## Request Lifecycles
+
+### `/search`
+
+1. Validate query parameters.
+2. Retrieve from Tavily.
+3. Attempt Cohere rerank.
+4. Fallback to native Tavily ordering on rerank failure.
+5. Return typed response.
+
+### `/answer`
+
+1. Execute search flow.
+2. Select top sources.
+3. Build synthesis prompt.
+4. Generate answer with citations.
+
+### `/conversations/{id}/messages`
+
+1. Validate conversation + query.
+2. Build context-enriched retrieval query.
+3. Execute search flow.
+4. Synthesize response with history context.
+5. Persist message result.
+
+## Reliability and Failure Strategy
+
+- Provider failures return structured 5xx with stable error codes.
+- Non-critical rerank failures degrade gracefully.
+- Global exception handling normalizes unhandled failures.
