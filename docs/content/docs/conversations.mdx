@@ -1,0 +1,58 @@
+---
+title: Conversation API
+description: Stateful, context-aware multi-turn retrieval and synthesis.
+icon: MessageCircle
+---
+
+## Design Intent
+
+The conversation API preserves context across turns so follow-up queries can be interpreted correctly without requiring client-side prompt stitching.
+
+Example:
+
+1. "What is SVB?"
+2. "Why did it collapse?"
+3. "What was the federal response?"
+
+Turn 2 and 3 are resolved using prior context.
+
+## Endpoints
+
+### `POST /conversations`
+
+Creates a new conversation object.
+
+### `GET /conversations?page=1&page_size=20`
+
+Returns paginated conversation summaries.
+
+### `GET /conversations/{id}`
+
+Returns the full conversation with messages and retrieval artifacts.
+
+### `POST /conversations/{id}/messages`
+
+Request body:
+
+```json
+{
+  "query": "why did it collapse"
+}
+```
+
+Behavior:
+
+- Uses recent prior queries to build retrieval context.
+- Reranks using the current query intent.
+- Synthesizes an answer with citations from top-ranked sources.
+- Persists message + citations + selected retrieval results.
+
+### `DELETE /conversations/{id}`
+
+Deletes conversation state and returns `204`.
+
+## Operational Notes
+
+- Conversation storage is in-memory by default.
+- Data resets on server restart unless persistence is added.
+- For production, replace in-memory store with durable storage.

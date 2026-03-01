@@ -1,0 +1,33 @@
+---
+title: Deployment
+description: Hosting the API and docs for external evaluators and developers.
+icon: Cloud
+---
+
+## API Deployment
+
+For hackathon and external review, deploy the API to a public host (e.g., Railway or Render) and expose:
+
+- Base API URL
+- `/docs` OpenAPI page
+- `/health` endpoint
+
+## Docs Deployment (TanStack Start + Fumadocs)
+
+Inside `docs/`:
+
+```bash
+npm install
+npm run build
+npm run start
+```
+
+Host the generated app on your platform of choice. Ensure the published URL is added to your root `README.md`.
+
+## Production Checklist
+
+- Environment variables configured on host
+- Secrets rotated and never committed
+- Error responses sanitized
+- Public docs URL verified
+- API quickstart examples tested against deployed URL

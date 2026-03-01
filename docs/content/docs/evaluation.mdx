@@ -1,0 +1,48 @@
+---
+title: Evaluation and Benchmarking
+description: Measuring retrieval quality, latency, reliability, and offline A/B outcomes.
+icon: BarChart3
+---
+
+## Benchmark Dimensions
+
+- **Latency**: p50/p95/p99 by endpoint.
+- **Reliability**: success rate and error code distribution.
+- **Rerank behavior**: fallback frequency and rank movement signals.
+- **Answer quality**: citation coverage and evaluator judgment.
+
+## Quick Benchmark
+
+Run API benchmark from repository root:
+
+```bash
+python scripts/benchmark_flux.py --queries-file scripts/benchmark_queries.txt --loops 2 --output reports/flux_benchmark_latest.json
+```
+
+## Offline A/B Evaluation
+
+This repository includes an offline comparison harness:
+
+- `baseline`: direct Tavily retrieval path
+- `flux`: retrieval via Flux `/search`
+
+Run:
+
+```bash
+python experiments/offline_eval/run_offline_eval.py --skip-synthesis --output experiments/offline_eval/outputs/run_latest.json
+python experiments/offline_eval/score_offline_eval.py --run experiments/offline_eval/outputs/run_latest.json
+```
+
+Artifacts:
+
+- `run_latest.json` (full run)
+- `judge_packet.jsonl` (blind evaluation packet)
+- `judge_scores_template.csv` (manual scoring sheet)
+- `scorecard_latest.md` (presentation-ready summary)
+
+## Recommended Review Process
+
+1. Run quantitative benchmark.
+2. Run offline A/B dataset pass.
+3. Conduct blind human grading with rubric.
+4. Publish scorecard with both latency and quality metrics.

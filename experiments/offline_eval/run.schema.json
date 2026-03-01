@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "OfflineEvalRun",
+  "type": "object",
+  "required": ["meta", "items"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["run_id", "created_at", "dataset_path", "systems"],
+      "properties": {
+        "run_id": { "type": "string" },
+        "created_at": { "type": "string" },
+        "dataset_path": { "type": "string" },
+        "systems": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["baseline", "flux"] }
+        },
+        "flux_base_url": { "type": "string" },
+        "synthesis_model": { "type": "string" }
+      }
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "query", "category", "expected_keywords", "results"],
+        "properties": {
+          "id": { "type": "string" },
+          "query": { "type": "string" },
+          "category": { "type": "string" },
+          "expected_keywords": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "results": {
+            "type": "object",
+            "properties": {
+              "baseline": { "$ref": "#/$defs/systemResult" },
+              "flux": { "$ref": "#/$defs/systemResult" }
+            },
+            "additionalProperties": false
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "citation": {
+      "type": "object",
+      "required": ["title", "url", "score", "rank"],
+      "properties": {
+        "title": { "type": "string" },
+        "url": { "type": "string" },
+        "score": { "type": "number" },
+        "rank": { "type": "integer" }
+      }
+    },
+    "systemResult": {
+      "type": "object",
+      "required": [
+        "system",
+        "success",
+        "answer",
+        "citations",
+        "retrieval_latency_ms",
+        "synthesis_latency_ms",
+        "total_latency_ms"
+      ],
+      "properties": {
+        "system": { "type": "string", "enum": ["baseline", "flux"] },
+        "success": { "type": "boolean" },
+        "error": { "type": ["string", "null"] },
+        "answer": { "type": "string" },
+        "citations": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/citation" }
+        },
+        "retrieval_latency_ms": { "type": "number" },
+        "synthesis_latency_ms": { "type": "number" },
+        "total_latency_ms": { "type": "number" },
+        "keyword_recall": { "type": ["number", "null"] }
+      }
+    }
+  }
+}

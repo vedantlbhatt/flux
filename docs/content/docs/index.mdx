@@ -1,0 +1,40 @@
+---
+title: Flux Documentation
+description: Live, grounded, context-aware web intelligence for AI applications.
+icon: Globe
+---
+
+Flux is an API service that provides live web retrieval, semantic reranking, and optional answer synthesis for AI applications. It is designed for teams that need current information without rebuilding retrieval infrastructure for every product.
+
+## Why Flux
+
+- **Live web retrieval** using Tavily, not a static corpus.
+- **Semantic reranking** using Cohere, with explicit relevance ordering.
+- **Context-aware conversations** for multi-turn assistants.
+- **Typed API responses and structured error codes** for reliable integration.
+
+<Cards>
+  <Card title="Getting Started" href="/docs/getting-started" />
+  <Card title="API Reference" href="/docs/api-reference" />
+  <Card title="Conversation API" href="/docs/conversations" />
+  <Card title="Architecture" href="/docs/architecture" />
+  <Card title="Evaluation and Benchmarking" href="/docs/evaluation" />
+</Cards>
+
+## Core Pipeline
+
+```text
+query -> Tavily retrieval -> Cohere rerank -> (optional) answer synthesis -> typed response
+```
+
+This separation is intentional:
+
+- Tavily retrieves source candidates.
+- Cohere ranks relevance.
+- Gemini/OpenAI-style synthesis (depending on deployment configuration) produces concise grounded answers.
+
+## Integration Contract
+
+- All successful responses are JSON and typed.
+- All failures return a structured shape: `{ error, code }`.
+- Endpoints are designed for direct use from backend services, agent frameworks, and internal platform gateways.

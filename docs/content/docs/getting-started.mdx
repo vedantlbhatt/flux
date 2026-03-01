@@ -1,0 +1,74 @@
+---
+title: Getting Started
+description: Install, configure, and make your first successful Flux API call.
+icon: Play
+---
+
+## Prerequisites
+
+- Python 3.11+ recommended.
+- API keys for Tavily and (optionally) Cohere and Gemini.
+- A running Flux backend (`main.py` + routers).
+
+## 1) Configure Environment
+
+Create a root `.env` file:
+
+```bash
+TAVILY_API_KEY=...
+COHERE_API_KEY=...          # optional but recommended
+GEMINI_API_KEY=...          # required for /answer and conversation synthesis
+```
+
+## 2) Start the API
+
+```bash
+python -m uvicorn main:app --host 127.0.0.1 --port 8000
+```
+
+Verify readiness:
+
+```bash
+curl http://127.0.0.1:8000/health
+```
+
+Expected shape:
+
+```json
+{
+  "status": "ok",
+  "cohere_ready": true,
+  "tavily_ready": true
+}
+```
+
+## 3) First Calls
+
+### Search
+
+```bash
+curl "http://127.0.0.1:8000/search?q=latest+AI+model+releases&limit=5"
+```
+
+### Answer
+
+```bash
+curl "http://127.0.0.1:8000/answer?q=why+did+SVB+collapse"
+```
+
+### Contents Extraction
+
+```bash
+curl "http://127.0.0.1:8000/contents?urls=https://en.wikipedia.org/wiki/Retrieval-augmented_generation"
+```
+
+## Local Docs Site (TanStack Start + Fumadocs)
+
+From the `docs` directory:
+
+```bash
+npm install
+npm run dev
+```
+
+Then open the docs UI in your browser using the local URL shown by Vite.

@@ -124,3 +124,26 @@ const apiKey = getTavilyApiKey();
 const res = await tavilySearch(apiKey, { query: "hello world", max_results: 5 });
 console.log(res.results);
 ```
+
+## AI Tooling Disclosure
+
+AI-assisted development tools were used during implementation. This project is not a wrapper, reskin, or minimal modification of an existing AI tool; the core product concept, architecture, API design, and evaluation approach were created as an original project.
+
+### Tools used
+
+- Cursor AI assistant (LLM-based coding assistant)
+- ChatGPT-class LLM assistance through Cursor workflows
+
+### What AI assisted with
+
+- Implementation acceleration (code scaffolding, refactors, and documentation drafting)
+- Debugging support and iteration on benchmark/evaluation scripts
+- Editing help for API docs and README clarity
+
+### What was created by the team
+
+- Original product idea and scope (live retrieval + reranking + conversation-aware API)
+- Endpoint design, data model choices, error contract, and system architecture
+- Evaluation methodology and comparison framing
+
+The project focus remained on building an original, production-oriented developer API over the weekend, with AI used strictly as an implementation aid.
