@@ -1,5 +1,7 @@
-"""Gemini API client for answer synthesis."""
+"""Gemini API client for answer synthesis. Retries on 429/503/500."""
 import httpx
+
+from utils.retry import retry_http
 
 MODEL = "gemini-2.5-flash-lite"
 GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent"
@@ -19,9 +21,11 @@ def gemini_generate(api_key: str, prompt: str, *, max_tokens: int = 512) -> str:
         },
     }
     with httpx.Client(timeout=60.0) as client:
-        resp = client.post(url, json=body)
-        resp.raise_for_status()
-        data = resp.json()
+        def do_request():
+            resp = client.post(url, json=body)
+            resp.raise_for_status()
+            return resp.json()
+        data = retry_http(do_request)
     candidates = data.get("candidates") or []
     if not candidates:
         raise ValueError("Gemini returned no candidates")

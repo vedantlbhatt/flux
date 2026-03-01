@@ -1,6 +1,8 @@
 """In-memory conversation store. Single source of truth for conversation data."""
 from typing import Any
 
+import config
+
 _conversations: dict[str, dict[str, Any]] = {}
 
 
@@ -22,8 +24,20 @@ def list_conversations(page: int = 1, page_size: int = 20) -> tuple[list[dict[st
     return all_convs[start:end], total
 
 
+def _evict_oldest_if_over_cap() -> None:
+    """If over MAX_CONVERSATIONS, remove oldest by created_at."""
+    if len(_conversations) <= config.MAX_CONVERSATIONS:
+        return
+    by_date = sorted(_conversations.items(), key=lambda x: x[1].get("created_at", ""))
+    to_remove = len(_conversations) - config.MAX_CONVERSATIONS
+    for i in range(to_remove):
+        if i < len(by_date):
+            del _conversations[by_date[i][0]]
+
+
 def create_conversation(conversation_id: str, created_at: str) -> dict[str, Any]:
-    """Create and store a new conversation. Returns the created object."""
+    """Create and store a new conversation. Evicts oldest if over cap. Returns the created object."""
+    _evict_oldest_if_over_cap()
     conv = {
         "id": conversation_id,
         "created_at": created_at,
@@ -35,11 +49,12 @@ def create_conversation(conversation_id: str, created_at: str) -> dict[str, Any]
 
 
 def update_conversation(conversation_id: str, message_count: int, messages: list[dict[str, Any]]) -> None:
-    """Update a conversation's message count and messages list."""
+    """Update a conversation's message count and messages list. Caps messages at MAX_MESSAGES_PER_CONVERSATION."""
     conv = _conversations.get(conversation_id)
     if conv:
-        conv["message_count"] = message_count
-        conv["messages"] = messages
+        capped = messages[-config.MAX_MESSAGES_PER_CONVERSATION:] if len(messages) > config.MAX_MESSAGES_PER_CONVERSATION else messages
+        conv["message_count"] = len(capped)
+        conv["messages"] = capped
 
 
 def delete_conversation(conversation_id: str) -> bool:

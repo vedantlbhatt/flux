@@ -1,5 +1,7 @@
-"""Tavily Search API client. Raises on non-200."""
+"""Tavily Search API client. Raises on non-200. Retries on 429/503/500."""
 import httpx
+
+from utils.retry import retry_http
 
 TAVILY_URL = "https://api.tavily.com/search"
 
@@ -33,6 +35,8 @@ def tavily_search(
             body["time_range"] = "year"
 
     with httpx.Client(timeout=30.0) as client:
-        resp = client.post(TAVILY_URL, json=body)
-        resp.raise_for_status()
-        return resp.json()
+        def do_request():
+            resp = client.post(TAVILY_URL, json=body)
+            resp.raise_for_status()
+            return resp.json()
+        return retry_http(do_request)

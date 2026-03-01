@@ -1,5 +1,7 @@
-"""Cohere Rerank API client. Returns list of (index, relevance_score)."""
+"""Cohere Rerank API client. Returns list of (index, relevance_score). Retries on 429/503/500."""
 import httpx
+
+from utils.retry import retry_http
 
 COHERE_RERANK_URL = "https://api.cohere.com/v2/rerank"
 
@@ -28,12 +30,14 @@ def cohere_rerank(
     }
 
     with httpx.Client(timeout=30.0) as client:
-        resp = client.post(
-            COHERE_RERANK_URL,
-            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
-            json=payload,
-        )
-        resp.raise_for_status()
-        data = resp.json()
+        def do_request():
+            resp = client.post(
+                COHERE_RERANK_URL,
+                headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+                json=payload,
+            )
+            resp.raise_for_status()
+            return resp.json()
+        data = retry_http(do_request)
         results = data.get("results", [])
         return [(r["index"], r["relevance_score"]) for r in results]

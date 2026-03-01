@@ -7,6 +7,7 @@ from utils.responses import PrettyJSONResponse
 from models.answer import AnswerResponse, Citation
 from models.error import ErrorResponse
 from services.search_flow import run_search
+from utils.safe_errors import redact_message
 from services.gemini_service import gemini_generate
 
 router = APIRouter(tags=["answer"])
@@ -81,7 +82,7 @@ def answer(
         logger.warning("Search failed: %s", e)
         return PrettyJSONResponse(
             status_code=502,
-            content={"error": str(e), "code": "TAVILY_ERROR"},
+            content={"error": redact_message(str(e)), "code": "TAVILY_ERROR"},
         )
 
     if not flow.results:
@@ -102,7 +103,7 @@ def answer(
         logger.warning("Gemini failed: %s", e)
         return PrettyJSONResponse(
             status_code=502,
-            content={"error": str(e), "code": "ANSWER_FAILED"},
+            content={"error": redact_message(str(e)), "code": "ANSWER_FAILED"},
         )
 
     # 14. Build citations from top 5

@@ -1,5 +1,6 @@
 """Conversation endpoints: create, list, get, add message, delete."""
 import logging
+import re
 import uuid
 from datetime import datetime, timezone
 
@@ -28,11 +29,25 @@ from store import (
     update_conversation,
 )
 from utils.responses import PrettyJSONResponse
+from utils.safe_errors import redact_message
 
 router = APIRouter(tags=["conversations"])
 logger = logging.getLogger(__name__)
 
 MAX_QUERY_LEN = 500
+UUID_PATTERN = re.compile(
+    r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+)
+
+
+def _validate_conversation_id(conversation_id: str) -> PrettyJSONResponse | None:
+    """Return error response if id is not a valid UUID; else None."""
+    if not UUID_PATTERN.match(conversation_id):
+        return PrettyJSONResponse(
+            status_code=400,
+            content={"error": "Invalid conversation ID format", "code": "INVALID_CONVERSATION_ID"},
+        )
+    return None
 
 
 def _build_message_prompt(current_query: str, history: list[tuple[str, str]], sources: list[tuple[str, str]]) -> str:
@@ -140,6 +155,9 @@ def get_conversation_endpoint(
     conversation_id: str = Path(..., description="Conversation ID"),
 ):
     """Retrieve full conversation with all messages and results."""
+    err = _validate_conversation_id(conversation_id)
+    if err is not None:
+        return err
     conv = get_conversation(conversation_id)
     if not conv:
         return PrettyJSONResponse(
@@ -169,6 +187,9 @@ def add_message_endpoint(
     Add a query to the conversation. Runs context-aware search + synthesis.
     Uses last 3 queries for retrieval context; reranks by current query only.
     """
+    err = _validate_conversation_id(conversation_id)
+    if err is not None:
+        return err
     query = (body.query or "").strip()
     if not query:
         return PrettyJSONResponse(
@@ -186,6 +207,14 @@ def add_message_endpoint(
         return PrettyJSONResponse(
             status_code=404,
             content={"error": "Conversation not found", "code": "CONVERSATION_NOT_FOUND"},
+        )
+    if conv.get("message_count", 0) >= config.MAX_MESSAGES_PER_CONVERSATION:
+        return PrettyJSONResponse(
+            status_code=400,
+            content={
+                "error": f"Conversation message limit ({config.MAX_MESSAGES_PER_CONVERSATION}) reached",
+                "code": "MESSAGE_LIMIT_REACHED",
+            },
         )
 
     if not config.TAVILY_API_KEY:
@@ -214,7 +243,7 @@ def add_message_endpoint(
         logger.warning("Search failed: %s", e)
         return PrettyJSONResponse(
             status_code=502,
-            content={"error": str(e), "code": "TAVILY_ERROR"},
+            content={"error": redact_message(str(e)), "code": "TAVILY_ERROR"},
         )
 
     if not flow.results:
@@ -235,7 +264,7 @@ def add_message_endpoint(
         logger.warning("Gemini failed: %s", e)
         return PrettyJSONResponse(
             status_code=502,
-            content={"error": str(e), "code": "ANSWER_FAILED"},
+            content={"error": redact_message(str(e)), "code": "ANSWER_FAILED"},
         )
 
     citations = [
@@ -278,6 +307,9 @@ def delete_conversation_endpoint(
     conversation_id: str = Path(..., description="Conversation ID"),
 ):
     """Delete a conversation and all its messages."""
+    err = _validate_conversation_id(conversation_id)
+    if err is not None:
+        return err
     deleted = delete_conversation(conversation_id)
     if not deleted:
         return PrettyJSONResponse(

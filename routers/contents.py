@@ -1,12 +1,15 @@
 """GET /contents — clean extracted text from specific URLs."""
 import logging
 import re
+from urllib.parse import urlparse
+
 from fastapi import APIRouter, Query
 
 import config
 from models.contents import PageContent
 from models.error import ErrorResponse
 from services.tavily_extract import tavily_extract
+from utils.safe_errors import redact_message
 from utils.responses import PrettyJSONResponse
 
 router = APIRouter(tags=["contents"])
@@ -89,6 +92,25 @@ def contents(
             content={"error": "At least one URL required", "code": "MISSING_URLS"},
         )
 
+    for u in url_list:
+        try:
+            parsed = urlparse(u)
+            if parsed.scheme not in ("http", "https"):
+                return PrettyJSONResponse(
+                    status_code=400,
+                    content={"error": "URLs must use http or https", "code": "INVALID_URLS"},
+                )
+            if not parsed.netloc or not parsed.netloc.strip():
+                return PrettyJSONResponse(
+                    status_code=400,
+                    content={"error": "Invalid URL: missing host", "code": "INVALID_URLS"},
+                )
+        except Exception:
+            return PrettyJSONResponse(
+                status_code=400,
+                content={"error": "Invalid URL format", "code": "INVALID_URLS"},
+            )
+
     if not config.TAVILY_API_KEY:
         return PrettyJSONResponse(
             status_code=502,
@@ -101,7 +123,7 @@ def contents(
         logger.warning("Tavily extract failed: %s", e)
         return PrettyJSONResponse(
             status_code=502,
-            content={"error": str(e), "code": "TAVILY_ERROR"},
+            content={"error": redact_message(str(e)), "code": "TAVILY_ERROR"},
         )
 
     results = data.get("results") or []

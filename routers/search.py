@@ -6,6 +6,7 @@ from models.search import SearchResponse
 from utils.responses import PrettyJSONResponse
 from models.error import ErrorResponse
 from services.search_flow import run_search
+from utils.safe_errors import redact_message
 
 router = APIRouter(tags=["search"])
 logger = logging.getLogger(__name__)
@@ -56,10 +57,10 @@ def search(
     try:
         flow = run_search(q.strip(), limit=limit, topic=topic or "general", days=days)
     except ValueError as e:
-        return PrettyJSONResponse(status_code=502, content={"error": str(e), "code": "TAVILY_ERROR"})
+        return PrettyJSONResponse(status_code=502, content={"error": redact_message(str(e)), "code": "TAVILY_ERROR"})
     except Exception as e:
         logger.warning("Search failed: %s", e)
-        return PrettyJSONResponse(status_code=502, content={"error": str(e), "code": "TAVILY_ERROR"})
+        return PrettyJSONResponse(status_code=502, content={"error": redact_message(str(e)), "code": "TAVILY_ERROR"})
 
     if not flow.results:
         return PrettyJSONResponse(
