@@ -14,5 +14,6 @@ def build_context_query(
     Tavily results will be relevant to the full conversation, not just the latest turn.
     """
     recent = list(previous_queries)[-max_previous:] if previous_queries else []
+    # Tavily gets full context; Cohere rerank still uses current_query only
     parts = list(recent) + [current_query]
     return " ".join(parts).strip()

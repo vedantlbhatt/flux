@@ -22,6 +22,7 @@ def cohere_rerank(
         return []
 
     top_n = top_n if top_n is not None else min(len(documents), 20)
+    # Cross-encoder: scores query-document relevance directly (not cosine on embeddings)
     payload = {
         "model": model,
         "query": query,

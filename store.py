@@ -1,8 +1,10 @@
-"""In-memory conversation store. Single source of truth for conversation data."""
+"""In-memory conversation store. Single source of truth for conversation data.
+
+Only this module reads/writes the store. Resets on server restart; no persistence.
+"""
 from typing import Any
 
-import config
-
+# conversation_id -> { id, created_at, message_count, messages }
 _conversations: dict[str, dict[str, Any]] = {}
 
 

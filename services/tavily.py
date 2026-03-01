@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 """Tavily Search API client. Raises on non-200. Retries on 429/503/500."""
+=======
+"""Tavily Search API client. Raises on non-200.
+
+Used for live web retrieval; returns up to max_results with pre-extracted content.
+"""
+>>>>>>> da55ba4 (chore: comments)
 import httpx
 
 from utils.retry import retry_http
@@ -24,7 +31,7 @@ def tavily_search(
         "search_depth": search_depth,
     }
     if days is not None and days >= 1:
-        # Map days to Tavily time_range
+        # Map numeric days to Tavily time_range (day/week/month/year)
         if days <= 1:
             body["time_range"] = "day"
         elif days <= 7:

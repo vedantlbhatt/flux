@@ -12,6 +12,8 @@ logger = logging.getLogger(__name__)
 
 
 class SearchFlowResult(NamedTuple):
+    """Result of run_search: ranked results and whether Cohere rerank was applied."""
+
     results: list[SearchResult]
     reranked: bool
 
@@ -40,6 +42,7 @@ def run_search(
         days=days,
     )
     results_list = tavily_data.get("results") or []
+    # Concatenate title + content for Cohere (rerank uses current query only)
     documents = [f"{r.get('title', '')}\n{r.get('content', '')}" for r in results_list]
 
     if config.COHERE_API_KEY:
@@ -48,6 +51,7 @@ def run_search(
             ranked = merge_and_rank(results_list, scores)
             return SearchFlowResult(results=ranked[:limit], reranked=True)
         except Exception as e:
+            # Degrade to Tavily order; do not fail the request
             logger.warning("Cohere rerank failed: %s", e)
             ranked = tavily_only_results(results_list)
             return SearchFlowResult(results=ranked[:limit], reranked=False)

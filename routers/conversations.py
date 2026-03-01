@@ -235,6 +235,7 @@ def add_message_endpoint(
             content={"error": "Gemini API key not configured", "code": "ANSWER_FAILED"},
         )
 
+    # Context-aware retrieval: last 3 queries + current → Tavily; rerank uses current only
     previous_queries = [m["query"] for m in conv.get("messages", [])]
     context_query = build_context_query(query, previous_queries, max_previous=3)
 

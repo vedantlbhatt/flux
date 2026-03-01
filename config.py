@@ -1,12 +1,19 @@
-"""Load API keys and app config from environment."""
+"""Load API keys from environment.
+
+All keys come from config only; no hardcoded keys elsewhere.
+Empty or whitespace-only env values are treated as unset (None).
+"""
 import os
 
 from dotenv import load_dotenv
 
 load_dotenv()
 
+# Tavily: search + extract; required for /search, /answer, /contents
 TAVILY_API_KEY: str | None = os.environ.get("TAVILY_API_KEY", "").strip() or None
+# Cohere: reranking; optional — degrades to Tavily order if unset or on failure
 COHERE_API_KEY: str | None = os.environ.get("COHERE_API_KEY", "").strip() or None
+# Gemini: answer synthesis for /answer and conversation messages
 GEMINI_API_KEY: str | None = os.environ.get("GEMINI_API_KEY", "").strip() or None
 GEMINI_MODEL: str = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash").strip() or "gemini-2.5-flash"
 

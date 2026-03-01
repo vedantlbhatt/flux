@@ -1,4 +1,7 @@
-"""GET /search — live web search, Cohere reranked."""
+"""GET /search — live web search, Cohere reranked.
+
+Validate → Tavily → Cohere rerank (or degrade) → SearchResponse. No business logic in router.
+"""
 import logging
 from fastapi import APIRouter, Query
 import config
@@ -28,6 +31,8 @@ def search(
     topic: str | None = Query(None),
     days: int | None = Query(None, ge=1),
 ):
+    """Live web search: validate params → Tavily → Cohere rerank → SearchResponse."""
+    # Validate query and optional filters before any external call
     if not q or not q.strip():
         return PrettyJSONResponse(
             status_code=400,

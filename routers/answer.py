@@ -21,6 +21,7 @@ SYSTEM_INSTRUCTION = (
 
 
 def _build_prompt(query: str, sources: list[tuple[str, str]]) -> str:
+    """Build system prompt: answer from sources only, cite by [1], [2], etc."""
     parts = [
         SYSTEM_INSTRUCTION,
         "",
@@ -51,6 +52,7 @@ def answer(
     topic: str | None = Query(None),
     days: int | None = Query(None, ge=1),
 ):
+    """Synthesized answer: search + rerank → top 5 → Gemini → answer + citations."""
     if not q or not q.strip():
         return PrettyJSONResponse(
             status_code=400,
