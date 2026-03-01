@@ -13,8 +13,14 @@
 (function () {
   const $ = (id) => document.getElementById(id);
 
+  const DEFAULT_API_URL = 'https://flux-production-9c9e.up.railway.app';
+  const LOCALHOST_API = 'http://localhost:8000';
+
   function baseUrl() {
-    return (($('baseUrl')?.value || '').trim() || 'http://localhost:8000').replace(/\/$/, '');
+    const raw = ($('baseUrl')?.value || '').trim();
+    if (raw) return raw.replace(/\/$/, '');
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    return (isLocal ? LOCALHOST_API : DEFAULT_API_URL).replace(/\/$/, '');
   }
 
   async function api(path, options = {}) {
@@ -296,6 +302,15 @@
   });
 
   // --- Init ---
+  // When deployed (Vercel, Railway, etc.), ensure API URL is not localhost so health check works.
+  const input = $('baseUrl');
+  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  if (input && !isLocal) {
+    const current = (input.value || '').trim();
+    if (!current || current === LOCALHOST_API || current.startsWith('http://localhost') || current.startsWith('http://127.0.0.1')) {
+      input.value = window.location.hostname.includes('railway.app') ? window.location.origin : DEFAULT_API_URL;
+    }
+  }
   checkHealth();
   loadConversations();
 })();
